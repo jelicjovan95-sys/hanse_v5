@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="sr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>hanse. • Recruitment Performance</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="filter-styles.css">
+  <link rel="stylesheet" href="dashboard-tabs.css">
+  <link rel="stylesheet" href="lead-actions.css">
+  <link rel="stylesheet" href="duplicate-indicator.css">
+  <link rel="stylesheet" href="inbox-styles.css">
+
+</head>
+
+<body>
+  <div class="app" id="app">
+    <div class="backdrop" id="backdrop"></div>
+
+    <aside class="sidebar" aria-label="Sidebar">
+      <!-- Mobile close button — hidden on desktop -->
+      <div class="sidebar-close-row">
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu"
+          onclick="document.getElementById('app').classList.remove('sidebar-open')">✕</button>
+      </div>
+
+
+      <div class="brand">
+        <img src="assets/img/bluelogo.png" alt="Hanse logo" onerror="this.style.display='none'" />
+        <div class="t">
+          <strong>hanse.</strong>
+          <span>Recruitment Dashboard</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Navigation">
+        <button type="button" data-view="executive-dashboard">
+          <div class="ico"><img src="assets/img/performance.png" alt="Executive" style="width:22px; height:22px; filter: hue-rotate(180deg);" />
+          </div>
+          <div class="meta"><strong>Executive</strong><span>Company Overview</span></div>
+        </button>
+        <button class="active" type="button" data-view="lead-dashboard">
+          <div class="ico"><img src="assets/img/leaddashboard.png" alt="Lead Dashboard" style="width:22px; height:22px;"
+              onerror="this.textContent='📊'" /></div>
+          <div class="meta"><strong>Lead Dashboard</strong><span>All Leads</span></div>
+        </button>
+        <button type="button" data-view="performance">
+          <div class="ico"><img src="assets/img/performance.png" alt="Performance" style="width:22px; height:22px;" />
+          </div>
+          <div class="meta"><strong>Performance</strong><span>Leaderboard & KPIs</span></div>
+        </button>
+        <button type="button" data-view="recruiting">
+          <div class="ico"><img src="assets/img/recruting.png" alt="Recruiting" style="width:22px; height:22px;" />
+          </div>
+          <div class="meta"><strong>Recruiting</strong><span>Pipeline</span></div>
+        </button>
+        <button type="button" data-view="safety">
+          <div class="ico"><img src="assets/img/saefty.png" alt="Safety" style="width:22px; height:22px;" /></div>
+          <div class="meta"><strong>Safety</strong><span>Compliance</span></div>
+        </button>
+        <button type="button" data-view="fleet">
+          <div class="ico"><img src="assets/img/fleet.png" alt="Fleet" style="width:22px; height:22px;" /></div>
+          <div class="meta"><strong>Fleet</strong><span>Operations</span></div>
+        </button>
+        <button type="button" data-view="accounting">
+          <div class="ico"><img src="assets/img/accounting.png" alt="Accounting" style="width:22px; height:22px;" />
+          </div>
+          <div class="meta"><strong>Accounting</strong><span>Payroll & Docs</span></div>
+        </button>
+        <button type="button" data-view="inbox">
+          <div class="ico"><img src="assets/inbox.png" alt="Inbox" style="width:22px; height:22px;" />
+          </div>
+          <div class="meta"><strong>Inbox</strong><span>Messages</span></div>
+        </button>
+      </nav>
+
+      <div class="side-footer">
+        <label class="theme-switch" title="Toggle Dark Mode">
+          <input type="checkbox" id="themeToggleCheckbox">
+          <span class="slider">
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+          </span>
+        </label>
+
+      </div>
+    </aside>
+
+    <main class="main">
+      <header>
+        <div class="title">
+          <button class="hamburger" id="toggle" aria-label="Toggle sidebar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="rgba(15,23,42,.9)" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+          <div>
+            <div class="word">hanse.</div>
+          </div>
+        </div>
+
+
+        <div class="profile-wrapper" style="position: relative;">
+          <div class="profile" id="profileBtn" title="Profile">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="stroke: var(--text);">
+              <path d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke-width="2" />
+              <path d="M20 21a8 8 0 1 0-16 0" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+
+          <div class="profile-popup" id="profilePopup">
+            <div class="popup-header">
+              <div class="popup-avatar">JD</div>
+              <div class="popup-info">
+                <div class="popup-name">John Doe</div>
+                <div class="popup-role">Senior Recruiter</div>
+              </div>
+            </div>
+            <div class="popup-body">
+              <div class="popup-item">
+                <span class="label">Email</span>
+                <span class="value">john.doe@hanse.com</span>
+              </div>
+              <div class="popup-item">
+                <span class="label">Department</span>
+                <span class="value">Recruiting</span>
+              </div>
+              <div class="popup-item">
+                <span class="label">Employee ID</span>
+                <span class="value">#8492</span>
+              </div>
+            </div>
+            <div class="popup-footer">
+              <button class="logout-btn">Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="main-search-container">
+        <div class="search-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="leadSearchInput" placeholder="Search leads..." autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Lead Dashboard View -->
+      <section class="view-section" id="lead-dashboard-view"
+        style="position: relative; overflow: hidden; min-height: 80vh;">
+        <div class="lead-dashboard-container">
+          <div class="lead-dashboard-card">
+            <div class="lead-dashboard-header-controls">
+              <div class="lead-dashboard-title">Leads</div>
+              <div class="lead-dashboard-actions">
+                <button id="openFilterBtn" class="filter-button" title="Filter leads">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+                  </svg>
+                  Search / Filter
+                </button>
+              </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="dashboard-tabs">
+              <button class="dashboard-tab active" data-tab="active" onclick="switchDashboardTab('active')">
+                Active Leads
+              </button>
+              <button class="dashboard-tab" data-tab="check" onclick="switchDashboardTab('check')">
+                Lead Check
+              </button>
+              <button class="dashboard-tab" data-tab="working" onclick="switchDashboardTab('working')">
+                Processed Leads
+              </button>
+            </div>
+
+            <!-- Active Filter Chips -->
+            <div id="filterChipsContainer" class="filter-chips-container" style="display: none;"></div>
+            <div class="lead-dashboard-topline"></div>
+            <table class="lead-dashboard-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Zip Code</th>
+                  <th>State</th>
+                  <th>City</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leadDashboardBody">
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Performance View -->
+      <section class="view-section active" id="performance-view"
+        style="position: relative; overflow: hidden; min-height: 80vh;">
+
+        <style>
+          #performance-view .card {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(8px);
+          }
+
+          /* Ensure table rows are also transparent enough */
+          #performance-view tbody tr:hover {
+            background: rgba(90, 167, 255, .15) !important;
+          }
+        </style>
+
+        <div class="performance-filters" style="margin-bottom: 24px; display: flex; justify-content: flex-end;">
+          <div class="time-toggle">
+            <button class="performance-time-btn" data-time="daily">Daily</button>
+            <button class="performance-time-btn active" data-time="weekly">Weekly</button>
+            <button class="performance-time-btn" data-time="monthly">Monthly</button>
+            <button class="performance-time-btn" data-time="yearly">Yearly</button>
+          </div>
+        </div>
+
+        <section class="kpi-row" aria-label="KPIs" style="position: relative; z-index: 1;">
+          <div class="kpi" data-kpi="lc" aria-label="Leads Contacted">
+            <div class="glow"></div>
+            <svg viewBox="0 0 120 120" width="150" height="150" aria-hidden="true">
+              <defs>
+                <linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="rgba(47,94,169,.95)" />
+                  <stop offset="100%" stop-color="rgba(90,167,255,.95)" />
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(15,23,42,.10)" stroke-width="10" />
+              <circle class="prog" cx="60" cy="60" r="44" fill="none" stroke="url(#gradBlue)" stroke-width="10"
+                stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46" />
+            </svg>
+            <div class="center">
+              <div class="val" id="kpiLC">343</div>
+              <div class="lab">LC</div>
+            </div>
+          </div>
+
+          <div class="kpi" data-kpi="cr" aria-label="Close Rate">
+            <div class="glow"></div>
+            <svg viewBox="0 0 120 120" width="150" height="150" aria-hidden="true">
+              <defs>
+                <linearGradient id="gradNavy" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="rgba(15,23,42,.92)" />
+                  <stop offset="100%" stop-color="rgba(47,94,169,.92)" />
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(15,23,42,.10)" stroke-width="10" />
+              <circle class="prog" cx="60" cy="60" r="44" fill="none" stroke="url(#gradNavy)" stroke-width="10"
+                stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46" />
+            </svg>
+            <div class="center">
+              <div class="val" id="kpiCR">10%</div>
+              <div class="lab">CR</div>
+            </div>
+          </div>
+
+          <div class="kpi" data-kpi="closed" aria-label="Leads Closed">
+            <div class="glow"></div>
+            <svg viewBox="0 0 120 120" width="150" height="150" aria-hidden="true">
+              <defs>
+                <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="rgba(212,165,58,.95)" />
+                  <stop offset="100%" stop-color="rgba(47,94,169,.80)" />
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(15,23,42,.10)" stroke-width="10" />
+              <circle class="prog" cx="60" cy="60" r="44" fill="none" stroke="url(#gradGold)" stroke-width="10"
+                stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46" />
+            </svg>
+            <div class="center">
+              <div class="val" id="kpiClosed">34</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-label="Leaderboard">
+          <div class="card-topline"></div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:70px">Rank</th>
+                <th style="width:320px">Name</th>
+                <th>Leads Contacted</th>
+                <th>Close Rate %</th>
+                <th>Avg Time to Close</th>
+                <th>Leads Closed</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </section>
+      </section>
+
+      <!-- Recruiting View -->
+      <section class="view-section recruiting-view" id="recruiting-view">
+        <div class="recruiting-board">
+          <div class="recruiting-search-bar" style="position: relative;">
+            <input type="text" id="tagSearchInput" placeholder="🔍 Search by tag..." autocomplete="off" />
+            <div class="search-results-dropdown" id="searchResultsDropdown"></div>
+          </div>
+          <div class="funnel" id="funnelBoard"></div>
+        </div>
+      </section>
+
+      <!-- Executive Dashboard View -->
+      <section class="view-section" id="executive-dashboard-view" style="min-height: 80vh;">
+        <div class="exec-dashboard-container">
+          <!-- Top Filters -->
+          <div class="exec-filters-card">
+            <div class="exec-filters-row">
+              <div class="exec-search-wrap">
+                <input type="text" id="execEmployeeSearch" placeholder="Search employee..." />
+              </div>
+              <div class="exec-select-wrap">
+                <select id="execDeptFilter">
+                  <option value="all">All Departments</option>
+                  <option value="Recruiting">Recruiting</option>
+                  <option value="Safety">Safety</option>
+                  <option value="Fleet">Fleet</option>
+                  <option value="Accounting">Accounting</option>
+                </select>
+              </div>
+              <div class="exec-time-wrap">
+                <div class="time-toggle">
+                  <button class="time-btn active" data-time="daily">Daily</button>
+                  <button class="time-btn" data-time="weekly">Weekly</button>
+                  <button class="time-btn" data-time="monthly">Monthly</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Stats Grid -->
+          <div id="execSearchHighlight"></div>
+          <div class="exec-stats-grid" id="execMainStats">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Department Cards Section -->
+          <div class="exec-section-title">Department Performance</div>
+          <div class="exec-dept-grid" id="execDeptStats">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Leaderboard Table Section -->
+          <div class="exec-section-title">Employee Performance Leaderboard</div>
+          <div class="exec-table-card">
+            <div class="table-responsive">
+              <table class="exec-leaderboard-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Employee</th>
+                    <th>Dept</th>
+                    <th>Leads</th>
+                    <th>Contacted</th>
+                    <th>Closed</th>
+                    <th>CR %</th>
+                    <th>Calls</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="execLeaderboardBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Safety View -->
+      <section class="view-section safety-view" id="safety-view">
+        <div class="recruiting-board">
+          <div class="recruiting-search-bar" style="position: relative;">
+            <input type="text" id="safetyTagSearchInput" placeholder="🔍 Search by tag..." autocomplete="off" />
+            <div class="search-results-dropdown" id="safetySearchResultsDropdown"></div>
+          </div>
+          <div class="funnel" id="safetyBoard"></div>
+        </div>
+      </section>
+
+      <!-- Fleet View -->
+      <section class="view-section fleet-view" id="fleet-view">
+        <div class="recruiting-board">
+          <div class="funnel" id="fleetBoard"></div>
+        </div>
+      </section>
+
+      <!-- Accounting View -->
+      <section class="view-section accounting-view" id="accounting-view">
+        <div class="recruiting-board">
+          <div class="funnel" id="accountingBoard"></div>
+        </div>
+      </section>
+
+      <!-- Earnings View -->
+      <section class="view-section earnings-view" id="earnings-view">
+        <div class="earnings-container" id="earningsContainer">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- Inbox View -->
+      <section class="view-section inbox-view" id="inbox-view">
+        <div class="inbox-container">
+          <!-- Left List Pane -->
+          <div class="inbox-list-pane" id="inboxListPane">
+            <div class="inbox-header">
+              <h2>Inbox</h2>
+              <div class="inbox-type-tabs">
+                <button class="inbox-type-tab active" data-tab="external">External (Leads)</button>
+                <button class="inbox-type-tab" data-tab="internal">Internal (Team)</button>
+              </div>
+            </div>
+            <div class="inbox-search">
+              <input type="text" id="inboxSearchInput" placeholder="Search chats..." />
+            </div>
+            <div class="inbox-list" id="inboxList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+          
+          <!-- Right Chat Pane -->
+          <div class="inbox-chat-pane" id="inboxChatPane">
+            <div class="inbox-empty-state" id="inboxEmptyState">
+              <div class="ico">✉️</div>
+              <p>Select a chat to start messaging</p>
+            </div>
+            
+            <div class="inbox-active-chat" id="inboxActiveChat" style="display: none;">
+              <div class="inbox-chat-header">
+                <button class="inbox-back-btn" id="inboxBackBtn">←</button>
+                <div class="inbox-lead-info">
+                  <h3 id="inboxChatName">Lead Name</h3>
+                  <span id="inboxChatStatus" class="inbox-status">Online</span>
+                </div>
+                <button class="inbox-open-lead-btn" id="inboxOpenLeadBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  <span>Open Card</span>
+                </button>
+              </div>
+              
+              <div class="inbox-messages" id="inboxMessages">
+                <!-- Populated by JS -->
+              </div>
+              
+              <div class="inbox-input-area">
+                <button class="inbox-attach-btn">📎</button>
+                <input type="text" id="inboxMessageInput" placeholder="Type a message..." />
+                <button class="inbox-send-btn" id="inboxSendBtn">➤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Filter Modal -->
+    <div class="filter-modal-backdrop" id="filterModalBackdrop">
+      <div class="filter-modal">
+        <div class="filter-modal-header">
+          <h2>Filter Leads</h2>
+          <div class="filter-modal-header-actions">
+            <button id="resetFiltersBtn" class="filter-btn filter-btn-secondary">Reset</button>
+            <button id="applyFiltersBtn" class="filter-btn filter-btn-primary">Apply</button>
+            <button id="closeFilterBtn" class="filter-close-btn" aria-label="Close">✕</button>
+          </div>
+        </div>
+
+        <div class="filter-modal-body">
+          <!-- Left Sidebar: Filter Groups -->
+          <div class="filter-sidebar" id="filterSidebar">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Right Panel: Filter Controls -->
+          <div class="filter-controls" id="filterControls">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Sticky Footer -->
+        <div class="filter-sticky-footer">
+          <div id="filterResultsCount" class="filter-results-count">Showing all leads</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recruiting Modal -->
+    <div class="modal-backdrop-recruiting" id="modalBackdropRecruiting">
+      <div class="modal-recruiting">
+        <div class="modal-left-recruiting">
+          <div class="modal-header-recruiting">
+            <div class="modal-title-recruiting">Lead Details</div>
+            <div class="close-btn-recruiting" id="closeBtnRecruiting">✕</div>
+          </div>
+
+          <div class="top-actions-recruiting"></div>
+
+          <div id="modalContentRecruiting"></div>
+        </div>
+
+        <div class="modal-right-recruiting">
+          <div class="chat-header-recruiting" style="padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <div class="chat-tabs-recruiting" style="display: flex; gap: 16px;">
+              <div class="chat-tab-recruiting active" data-tab="chat" style="color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; padding-bottom: 4px; border-bottom: 2px solid #3b82f6;">CHAT & ACTIVITY</div>
+              <div class="chat-tab-recruiting" data-tab="transcript" style="color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 700; cursor: pointer; padding-bottom: 4px;">TRANSCRIPT</div>
+            </div>
+            <div class="chat-close-btn-mobile" onclick="const leadId = document.getElementById('modalBackdropRecruiting').dataset.currentLeadId; const lead = (typeof leads !== 'undefined' ? leads.find(l => l.id === leadId) : null) || (typeof dashboardLeads !== 'undefined' ? dashboardLeads.find(l => l.id === leadId) : null); if(lead) openRecruitingModal(lead, false, false);" style="color: #fff; cursor: pointer; opacity: 0.7;">✕</div>
+          </div>
+          <div class="chat-messages-recruiting"></div>
+          <div class="chat-input-area-recruiting" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px;">
+            <div class="chat-attach-recruiting" style="cursor: pointer; opacity: 0.6; display: flex; align-items: center; justify-content: center;">
+              <img src="assets/img/paperclip.png" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" alt="Attach">
+            </div>
+            <input type="text" class="chat-input-recruiting" placeholder="Start chat" style="flex: 1; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 13px;">
+            <div class="chat-send-recruiting" style="cursor: pointer; color: #3b82f6; font-size: 18px;">➤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead Detail Panel (old one) -->
+    <div class="panel-backdrop" id="panelBackdrop"></div>
+    <aside class="lead-panel" id="leadPanel">
+      <div class="panel-header">
+        <div class="panel-title">Lead Details</div>
+        <button class="close-panel" id="closePanel" aria-label="Close panel">✕</button>
+      </div>
+      <div class="panel-actions">
+        <button class="action-btn">📞 Call</button>
+        <button class="action-btn">✉️ Email</button>
+        <button class="action-btn">↗️ Forward</button>
+      </div>
+      <div class="panel-content" id="panelContent"></div>
+    </aside>
+  </div>
+
+  <div class="chat-widget-wrapper">
+    <button class="chat-toggle-btn" id="chatToggleBtn">
+      <img src="assets/img/chat.png" alt="Chat" />
+    </button>
+
+    <div class="chat-window" id="chatWindow">
+      <!-- Employee List View -->
+      <div class="chat-list-view" id="chatListView">
+        <div class="chat-window-header">
+          <div class="header-title">Team Chat</div>
+          <div class="header-close" id="chatCloseBtn">✕</div>
+        </div>
+
+        <!-- Department Pills -->
+        <div class="chat-dept-pills">
+          <button class="dept-pill active" data-dept="all">All</button>
+          <button class="dept-pill" data-dept="recruiting">Recruiting</button>
+          <button class="dept-pill" data-dept="safety">Safety</button>
+          <button class="dept-pill" data-dept="fleet">Fleet</button>
+          <button class="dept-pill" data-dept="accounting">Accounting</button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="chat-search-box">
+          <input type="text" id="employeeSearch" placeholder="Search employee…" />
+        </div>
+
+        <!-- Employee List -->
+        <div class="chat-body-scroll">
+          <div class="employee-list" id="employeeList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Thread View -->
+      <div class="chat-thread-view" id="chatThreadView" style="display: none;">
+        <div class="chat-window-header">
+          <button class="chat-back-btn" id="chatBackBtn">←</button>
+          <div>
+            <div class="header-title" id="chatThreadName">Employee Name</div>
+            <div class="chat-thread-dept" id="chatThreadDept">Department</div>
+          </div>
+          <div class="header-close" id="chatCloseBtn2">✕</div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="chat-messages-area" id="chatMessagesArea">
+          <!-- Messages populated by JS -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area">
+          <input type="text" id="chatMessageInput" placeholder="Type a message..." />
+          <button class="chat-send-btn" id="chatSendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee Detail Modal -->
+  <div class="modal-backdrop-recruiting" id="employeeDetailModal" style="display: none; align-items: flex-start; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+    <div class="modal-recruiting-clean" style="max-width: 900px; width: 100%; background: #fff; border-radius: 20px; box-shadow: 0 25px 100px rgba(0,0,0,0.3); margin: auto;">
+      <div class="modal-header-recruiting" style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9; position: sticky; top: 0; background: #fff; border-radius: 20px 20px 0 0; z-index: 100; display: flex; justify-content: space-between; align-items: center;">
+        <div class="header-left">
+          <h2 id="modalEmpName" style="margin:0; font-size: 20px;">Employee Name</h2>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+            <span class="badge" id="modalEmpDept" style="font-size: 10px;">Department</span>
+            <button class="msg-emp-btn" style="background: #3b82f6; color: #fff; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer;">
+              Message
+            </button>
+          </div>
+        </div>
+        <button class="close-modal-btn" onclick="closeEmployeeModal()" style="background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 20px;">×</button>
+      </div>
+      <div class="modal-body-recruiting" style="padding: 0;">
+        <div id="employeeModalContent">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Filter System Scripts -->
+  <script src="js/lead-filter-schema.js"></script>
+  <script src="js/lead-filter-logic.js"></script>
+  <script src="js/lead-filter-ui.js"></script>
+
+  <!-- Main App Scripts -->
+  <script src="js/executiveData.js"></script>
+  <script src="app.js"></script>
+  <script src="leadModal.js"></script>
+  <script src="chat_logic_clean.js"></script>
+  <script src="inbox_logic.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+/* ========================================
+   DASHBOARD TABS STYLES
+   ======================================== */
+
+.dashboard-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 0 16px 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0;
+}
+
+.dashboard-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -2px;
+}
+
+.dashboard-tab:hover {
+    color: var(--text);
+    background: rgba(47, 94, 169, 0.05);
+}
+
+.dashboard-tab.active,
+button.dashboard-tab.active {
+    color: #2f5ea9 !important;
+    border-bottom-color: #2f5ea9 !important;
+    background: rgba(47, 94, 169, 0.08) !important;
+    font-weight: 700;
+}
+
+/* Dark Mode */
+body.dark-mode .dashboard-tab:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+body.dark-mode .dashboard-tab.active,
+body.dark-mode button.dashboard-tab.active {
+    color: #3b82f6 !important;
+    border-bottom-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.15) !important;
+}
