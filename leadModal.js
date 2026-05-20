@@ -170,7 +170,26 @@ function generateMasterFormsLink(leadId) {
         <div style="display: flex; gap: 8px; margin-top: 16px; align-items: center;">
             <input type="text" class="field-input" value="${mockLink}" readonly style="flex: 1; font-family: monospace; font-size: 13px; color: var(--blue);" onclick="this.select()">
             <button class="nav-btn" title="Copy Link" onclick="navigator.clipboard.writeText('${mockLink}'); const old=this.innerHTML; this.innerHTML='✅'; setTimeout(()=>this.innerHTML=old, 1500);">📋</button>
+            <button class="nav-btn" title="Preview / Edit Forms" style="font-size: 14px;" onclick="alert('Simulacija: Otvara se editor formi pre slanja vozaču.')">📝</button>
             <button class="nav-btn" title="Regenerate" onclick="generateMasterFormsLink('${leadId}')">🔄</button>
+        </div>
+    `;
+    isDirty = true;
+}
+
+function generateAgreementsLink(leadId) {
+    const wrapper = document.getElementById(`agreementsWrapper-${leadId}`);
+    if (!wrapper) return;
+    
+    const mockToken = Math.random().toString(36).substr(2, 9);
+    const mockLink = `https://hanse.com/agreements/${leadId}?t=${mockToken}`;
+    
+    wrapper.innerHTML = `
+        <div style="display: flex; gap: 8px; margin-top: 16px; align-items: center;">
+            <input type="text" class="field-input" value="${mockLink}" readonly style="flex: 1; font-family: monospace; font-size: 13px; color: var(--purple);" onclick="this.select()">
+            <button class="nav-btn" title="Copy Link" onclick="navigator.clipboard.writeText('${mockLink}'); const old=this.innerHTML; this.innerHTML='✅'; setTimeout(()=>this.innerHTML=old, 1500);">📋</button>
+            <button class="nav-btn" title="Preview / Edit Agreements" style="font-size: 14px;" onclick="alert('Simulacija: Otvara se editor ugovora pre slanja vozaču.')">📝</button>
+            <button class="nav-btn" title="Regenerate" onclick="generateAgreementsLink('${leadId}')">🔄</button>
         </div>
     `;
     isDirty = true;
@@ -389,6 +408,25 @@ function _renderFullModal(lead) {
                         <input type="date" class="field-input" onchange="isDirty=true">
                     </div>
                 </div>
+                
+                <div class="section-title" style="margin-top: 16px;">Agreements</div>
+                <div class="dnd-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 12px; gap: 12px;">
+                    <label style="font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="cb-ic-${lead.id}" checked onchange="isDirty=true"> Independent Contractor
+                    </label>
+                    <label style="font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="cb-lease-${lead.id}" onchange="isDirty=true"> Lease Agreement
+                    </label>
+                    <label style="font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="cb-manual-${lead.id}" checked disabled> Driver Manual (Auto)
+                    </label>
+                </div>
+
+                <div id="agreementsWrapper-${lead.id}" style="margin-bottom: 24px;">
+                    <button class="master-forms-btn" style="background: #3498db; border-color: #3498db;" onclick="generateAgreementsLink('${lead.id}')">🔗 Generate Agreements Link</button>
+                </div>
+
+                <div class="section-title" style="margin-top: 16px;">Master Forms</div>
                 <div id="masterFormsWrapper-${lead.id}">
                     <button class="master-forms-btn" onclick="generateMasterFormsLink('${lead.id}')">🔗 Generate link for Master Forms</button>
                 </div>
