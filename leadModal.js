@@ -113,26 +113,39 @@ function handleDrop(e, type, element) {
     element.classList.remove('dragover');
     isDirty = true;
     
+    // Auto-select the document type that was dropped (if applicable)
+    if (element.id && element.id.startsWith('doc-card-')) {
+        const parts = element.id.split('-');
+        if (parts.length >= 4) {
+            const leadId = parts.slice(3).join('-');
+            selectDocType(type, leadId);
+        }
+    }
+    
     if (type === 'cdl') {
-        document.querySelector('.cdl-num').value = 'B5551234';
-        document.querySelector('.cdl-exp').value = '2028-10-15';
-        document.querySelector('.cdl-dob').value = '1985-05-20';
-        document.querySelector('.cdl-state').value = 'TX';
-        document.querySelector('.cdl-type').value = 'Class A';
-        document.querySelector('.cdl-end').value = 'T, N';
+        setTimeout(() => {
+            const numEl = document.querySelector('.cdl-num');
+            const expEl = document.querySelector('.cdl-exp');
+            if (numEl) numEl.value = 'B5551234';
+            if (expEl) expEl.value = '2028-10-15';
+            const stateEl = document.querySelector('.cdl-state'); if(stateEl) stateEl.value = 'TX';
+            const typeEl = document.querySelector('.cdl-type'); if(typeEl) typeEl.value = 'Class A';
+            const endEl = document.querySelector('.cdl-end'); if(endEl) endEl.value = 'T, N';
+        }, 350); // wait for fade transition to finish rendering HTML
         element.style.borderColor = '#10b981';
         element.style.background = 'rgba(16, 185, 129, 0.05)';
-    } else if (type === 'medical' || type === 'mvr') {
-        const today = new Date().toISOString().split('T')[0];
-        element.querySelector('input').value = today;
+    } else if (type === 'medical' || type === 'mvr' || type === 'ssn') {
         element.style.borderColor = '#10b981';
+        element.style.background = 'rgba(16, 185, 129, 0.05)';
     } else if (type === 'registration') {
         const inputs = element.parentElement.querySelectorAll('input[type="text"]');
-        inputs[0].value = 'Freightliner';
-        inputs[1].value = '1FUJG6B9XKL123456';
-        inputs[2].value = 'Cascadia';
-        inputs[3].value = '2021';
-        inputs[4].value = 'TX-8942A';
+        if(inputs.length >= 5) {
+            inputs[0].value = 'Freightliner';
+            inputs[1].value = '1FUJG6B9XKL123456';
+            inputs[2].value = 'Cascadia';
+            inputs[3].value = '2021';
+            inputs[4].value = 'TX-8942A';
+        }
         element.style.borderColor = '#10b981';
     }
 }
@@ -338,53 +351,30 @@ function _renderFullModal(lead) {
                 <span>▼</span>
             </div>
             <div class="collapsible-content">
-                <div class="cdl-bracket" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'cdl', this);">
-                    <div style="font-size: 11px; font-weight: 800; color: var(--blue); margin-bottom: 12px; letter-spacing: 1px;">COMMERCIAL DRIVER LICENSE (CDL)</div>
-                    <div class="form-grid-3">
-                      <div class="field">
-                        <div class="field-label">Number</div>
-                        <input type="text" class="field-input cdl-num" value="" placeholder="Drag CDL here..." onchange="isDirty=true">
-                      </div>
-                      <div class="field">
-                        <div class="field-label">Expiration</div>
-                        <input type="date" class="field-input cdl-exp" value="" onchange="isDirty=true">
-                      </div>
-                      <div class="field">
-                        <div class="field-label">DOB</div>
-                        <input type="date" class="field-input cdl-dob" value="" onchange="isDirty=true">
-                      </div>
-                    </div>
-                    <div class="form-grid-3">
-                      <div class="field">
-                        <div class="field-label">State</div>
-                        <input type="text" class="field-input cdl-state" value="" onchange="isDirty=true">
-                      </div>
-                      <div class="field">
-                        <div class="field-label">Type</div>
-                        <input type="text" class="field-input cdl-type" value="" onchange="isDirty=true">
-                      </div>
-                      <div class="field">
-                        <div class="field-label">Endorsements</div>
-                        <input type="text" class="field-input cdl-end" value="" onchange="isDirty=true">
-                      </div>
-                    </div>
-                    <button class="copy-btn">Copy CDL Info</button>
+                <div id="active-doc-panel-${lead.id}" class="active-doc-panel">
+                    <!-- Dynamic content rendered here -->
                 </div>
 
-                <div class="dnd-grid">
-                    <div class="dnd-zone" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'medical', this);">
+                <div class="doc-cards-grid">
+                    <div id="doc-card-cdl-${lead.id}" class="doc-card active" onclick="selectDocType('cdl', '${lead.id}')" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'cdl', this);">
+                        <div class="dnd-text">Drop CDL here</div>
+                        <input type="date" class="field-input" style="margin-top:10px;" onclick="event.stopPropagation()" onchange="isDirty=true">
+                    </div>
+                    <div id="doc-card-mvr-${lead.id}" class="doc-card" onclick="selectDocType('mvr', '${lead.id}')" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'mvr', this);">
+                        <div class="dnd-text">Drop MVR here</div>
+                        <input type="date" class="field-input" style="margin-top:10px;" onclick="event.stopPropagation()" onchange="isDirty=true">
+                    </div>
+                    <div id="doc-card-medical-${lead.id}" class="doc-card" onclick="selectDocType('medical', '${lead.id}')" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'medical', this);">
                         <div class="dnd-text">Drop Medical Report</div>
-                        <input type="date" class="field-input" style="margin-top:10px;" onchange="isDirty=true">
+                        <input type="date" class="field-input" style="margin-top:10px;" onclick="event.stopPropagation()" onchange="isDirty=true">
                     </div>
-                    <div class="dnd-zone" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'mvr', this);">
-                        <div class="dnd-text">Drop MVR</div>
-                        <input type="date" class="field-input" style="margin-top:10px;" onchange="isDirty=true">
-                    </div>
-                    <div class="dnd-zone">
+                    <div id="doc-card-ssn-${lead.id}" class="doc-card" onclick="selectDocType('ssn', '${lead.id}')" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'ssn', this);">
                         <div class="dnd-text">Upload SSN</div>
-                        <input type="password" class="field-input" style="margin-top:10px;" placeholder="SSN Number" onchange="isDirty=true">
+                        <input type="password" class="field-input" style="margin-top:10px;" placeholder="SSN Number" onclick="event.stopPropagation()" onchange="isDirty=true">
                     </div>
                 </div>
+                <!-- Need a small script to bootstrap the first render -->
+                <img src onerror="selectDocType('cdl', '${lead.id}')" style="display:none;">
             </div>
         </div>
 
@@ -576,6 +566,7 @@ function _renderFullModal(lead) {
             <button class="master-forms-btn" style="background: var(--blue);" onclick="saveLead('${lead.id}')">💾 Save Changes</button>
         </div>
   `;
+  setTimeout(() => initAssignmentButtons(content, lead.id), 50);
 }
 
 function closeRecruitingModal() {
@@ -597,3 +588,209 @@ if (backdropRec) {
     if (e.target === backdropRec) closeRecruitingModal();
   };
 }
+
+
+function selectDocType(type, leadId) {
+    const cards = ["cdl", "mvr", "medical", "ssn"];
+    cards.forEach(c => {
+        const el = document.getElementById(`doc-card-${c}-${leadId}`);
+        if(el) el.classList.remove("active");
+    });
+    
+    const activeEl = document.getElementById(`doc-card-${type}-${leadId}`);
+    if(activeEl) activeEl.classList.add("active");
+    
+    renderActiveDocPanel(type, leadId);
+}
+
+function renderActiveDocPanel(type, leadId) {
+    const panel = document.getElementById(`active-doc-panel-${leadId}`);
+    if (!panel) return;
+    
+    panel.classList.add("fade-out");
+    setTimeout(() => {
+        let html = "";
+        if (type === "cdl") {
+            html = `
+            <div class="cdl-bracket" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'cdl', this);">
+                <div style="font-size: 11px; font-weight: 800; color: var(--blue); margin-bottom: 12px; letter-spacing: 1px;">EXTRACTED: COMMERCIAL DRIVER LICENSE (CDL)</div>
+                <div class="form-grid-3">
+                    <div class="field"><div class="field-label">Driver Name</div><input type="text" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">CDL Number</div><input type="text" class="field-input cdl-num" value="" placeholder="Drag CDL to extract..." onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">Expiration Date</div><input type="date" class="field-input cdl-exp" value="" onchange="isDirty=true"></div>
+                </div>
+                <div class="form-grid-3">
+                    <div class="field"><div class="field-label">State</div><input type="text" class="field-input cdl-state" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">CDL Class</div><input type="text" class="field-input cdl-type" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">Endorsements</div><input type="text" class="field-input cdl-end" value="" onchange="isDirty=true"></div>
+                </div>
+            </div>`;
+        } else if (type === "mvr") {
+            html = `
+            <div class="cdl-bracket" style="border-color: #f1c40f;" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'mvr', this);">
+                <div style="font-size: 11px; font-weight: 800; color: #f1c40f; margin-bottom: 12px; letter-spacing: 1px;">EXTRACTED: MOTOR VEHICLE RECORD (MVR)</div>
+                <div class="form-grid-3">
+                    <div class="field"><div class="field-label">Driver Name</div><input type="text" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">License Number</div><input type="text" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">State</div><input type="text" class="field-input" value="" onchange="isDirty=true"></div>
+                </div>
+                <div class="form-grid-3">
+                    <div class="field"><div class="field-label">MVR Score</div>
+                        <div class="mvr-score-box risk-medium">4</div>
+                    </div>
+                    <div class="field"><div class="field-label">Last Violation Date</div><input type="date" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">License Status</div><input type="text" class="field-input" value="Active" onchange="isDirty=true"></div>
+                </div>
+            </div>`;
+        } else if (type === "medical") {
+            html = `
+            <div class="cdl-bracket" style="border-color: #2ecc71;" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'medical', this);">
+                <div style="font-size: 11px; font-weight: 800; color: #2ecc71; margin-bottom: 12px; letter-spacing: 1px;">EXTRACTED: MEDICAL REPORT</div>
+                <div class="form-grid-3">
+                    <div class="field"><div class="field-label">Medical Status</div><input type="text" class="field-input" value="Certified" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">Examiner Name</div><input type="text" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">Submitted Date</div><input type="date" class="field-input" value="" onchange="isDirty=true"></div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="field"><div class="field-label">Expiration Date</div><input type="date" class="field-input" value="" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">Restrictions</div><input type="text" class="field-input" value="None" onchange="isDirty=true"></div>
+                </div>
+            </div>`;
+        } else if (type === "ssn") {
+            html = `
+            <div class="cdl-bracket" style="border-color: #9b59b6;" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'ssn', this);">
+                <div style="font-size: 11px; font-weight: 800; color: #9b59b6; margin-bottom: 12px; letter-spacing: 1px;">EXTRACTED: SOCIAL SECURITY NUMBER</div>
+                <div class="form-grid-2">
+                    <div class="field"><div class="field-label">Full Name Match</div><input type="text" class="field-input" value="Match" onchange="isDirty=true"></div>
+                    <div class="field"><div class="field-label">DOB Match</div><input type="text" class="field-input" value="Match" onchange="isDirty=true"></div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="field"><div class="field-label">Last 4 Digits</div><input type="password" class="field-input" value="1234" readonly></div>
+                    <div class="field"><div class="field-label">Verification Status</div><input type="text" class="field-input" value="Verified" onchange="isDirty=true"></div>
+                </div>
+            </div>`;
+        }
+        panel.innerHTML = html;
+        panel.classList.remove("fade-out");
+        
+        // Initialize assignment button on the newly rendered cdl-bracket
+        initAssignmentButtons(panel, leadId);
+    }, 300);
+}
+
+
+function initAssignmentButtons(container, leadId) {
+    const assignables = container.querySelectorAll(".dept-section, .collapsible-section, .cdl-bracket, .doc-card, .field");
+    assignables.forEach((el, index) => {
+        if(el.querySelector(".assign-btn")) return; // already added
+        el.classList.add("assignable-section");
+        if (!el.id) el.id = `assign-sec-${leadId}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        const btn = document.createElement("img");
+        btn.src = "assets/add.png";
+        btn.className = "assign-btn";
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            openAssignModal(el.id, leadId);
+        };
+        
+        if (el.classList.contains("dept-section")) {
+            const wrap = el.querySelector(".dept-progress-wrap");
+            const circle = el.querySelector(".dept-progress-circle");
+            if (wrap && circle) {
+                btn.style.position = "static";
+                btn.style.marginRight = "10px";
+                btn.style.marginTop = "0";
+                wrap.insertBefore(btn, circle);
+            } else {
+                el.appendChild(btn);
+            }
+        } else if (el.classList.contains("collapsible-section")) {
+            const header = el.querySelector(".collapsible-header");
+            const toggle = header ? header.querySelector("span:last-child") : null;
+            if (header && toggle) {
+                // Group the assign btn and the toggle together so flex space-between works perfectly
+                const group = document.createElement("div");
+                group.style.display = "flex";
+                group.style.alignItems = "center";
+                group.style.gap = "10px";
+                btn.style.position = "static";
+                btn.style.marginTop = "0";
+                header.insertBefore(group, toggle);
+                group.appendChild(btn);
+                group.appendChild(toggle);
+            } else {
+                el.appendChild(btn);
+            }
+        } else {
+            el.appendChild(btn);
+        }
+    });
+}
+
+function openAssignModal(sectionId, leadId) {
+    window.currentAssignSection = sectionId;
+    window.currentAssignLead = leadId;
+    document.getElementById("assignModalOverlay").style.display = "flex";
+}
+
+function confirmAssignment(employeeName) {
+    const sectionId = window.currentAssignSection;
+    const leadId = window.currentAssignLead;
+    document.getElementById("assignModalOverlay").style.display = "none";
+    
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    let btn = section.querySelector(".assign-btn");
+    if (btn) btn.style.display = "none";
+    
+    let avatar = section.querySelector(".assigned-avatar");
+    if (!avatar) {
+        avatar = document.createElement("div");
+        avatar.className = "assigned-avatar";
+        
+        if (btn && btn.parentElement && btn.style.position === "static") {
+            avatar.style.position = "static";
+            avatar.style.marginRight = btn.style.marginRight || "0";
+            avatar.style.marginTop = "0";
+            btn.parentElement.insertBefore(avatar, btn);
+        } else {
+            section.appendChild(avatar);
+        }
+    }
+    
+    avatar.style.display = "flex";
+    avatar.style.backgroundColor = "#eef2ff";
+    avatar.style.color = "#3b82f6";
+    
+    const parts = employeeName.split(" ");
+    let initials = parts[0].charAt(0);
+    if (parts.length > 1) initials += parts[parts.length - 1].charAt(0);
+    avatar.innerText = initials.toUpperCase();
+    
+    addAssignmentNotification(employeeName, sectionId, leadId);
+}
+
+function addAssignmentNotification(employeeName, sectionId, leadId) {
+    if(typeof window.demoNotifications === "undefined") window.demoNotifications = [];
+    const leadArr = (typeof leads !== "undefined" ? leads : (typeof dashboardLeads !== "undefined" ? dashboardLeads : []));
+    const lead = leadArr.find(l => l.id == leadId);
+    const leadName = lead ? `${lead.firstName} ${lead.lastName}` : "Unknown Lead";
+    
+    window.demoNotifications.unshift({
+        id: "notif-" + Math.random().toString(36).substr(2, 9),
+        employee: employeeName,
+        sectionId: sectionId,
+        leadId: leadId,
+        leadName: leadName,
+        message: `${employeeName} assigned a task to you for ${leadName}`,
+        time: new Date().toLocaleTimeString([], {hour: "2-digit", minute:"2-digit"}),
+        status: "pending"
+    });
+    
+    if(typeof renderNotifications === "function") {
+        renderNotifications();
+    }
+}
+

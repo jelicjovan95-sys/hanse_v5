@@ -71,7 +71,7 @@
         <button type="button" data-view="inbox">
           <div class="ico"><img src="assets/inbox.png" alt="Inbox" style="width:22px; height:22px;" />
           </div>
-          <div class="meta"><strong>Inbox</strong><span>Messages</span></div>
+          <div class="meta"><strong>Notification Center</strong><span>Messages & Tasks</span></div>
         </button>
       </nav>
 
@@ -420,10 +420,11 @@
           <!-- Left List Pane -->
           <div class="inbox-list-pane" id="inboxListPane">
             <div class="inbox-header">
-              <h2>Inbox</h2>
+              <h2>Notification Center</h2>
               <div class="inbox-type-tabs">
                 <button class="inbox-type-tab active" data-tab="external">External (Leads)</button>
                 <button class="inbox-type-tab" data-tab="internal">Internal (Team)</button>
+                <button class="inbox-type-tab" data-tab="notifications">Assignments</button>
               </div>
             </div>
             <div class="inbox-search">
@@ -633,6 +634,49 @@
     </div>
   </div>
 
+
+  <!-- Assign Modal -->
+  <div id="assignModalOverlay" class="assign-modal-overlay" style="display: none;" onclick="if(event.target===this) this.style.display='none'">
+    <div class="assign-modal">
+      <div class="employee-list" id="assignEmployeeList">
+        <div class="employee-item" onclick="confirmAssignment('John Doe')">
+          <div class="emp-avatar">JD</div>
+          <div class="emp-info">
+            <div class="emp-name">John Doe</div>
+            <div class="emp-role">Senior Recruiter</div>
+          </div>
+        </div>
+        <div class="employee-item" onclick="confirmAssignment('Mila Petrović')">
+          <div class="emp-avatar">MP</div>
+          <div class="emp-info">
+            <div class="emp-name">Mila Petrović</div>
+            <div class="emp-role">Recruiter</div>
+          </div>
+        </div>
+        <div class="employee-item" onclick="confirmAssignment('Alex Rivera')">
+          <div class="emp-avatar">AR</div>
+          <div class="emp-info">
+            <div class="emp-name">Alex Rivera</div>
+            <div class="emp-role">Recruiter</div>
+          </div>
+        </div>
+        <div class="employee-item" onclick="confirmAssignment('Sara Kim')">
+          <div class="emp-avatar">SK</div>
+          <div class="emp-info">
+            <div class="emp-name">Sara Kim</div>
+            <div class="emp-role">Junior Recruiter</div>
+          </div>
+        </div>
+        <div class="employee-item" onclick="confirmAssignment('Nikola Jovanović')">
+          <div class="emp-avatar">NJ</div>
+          <div class="emp-info">
+            <div class="emp-name">Nikola Jovanović</div>
+            <div class="emp-role">Recruiter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Filter System Scripts -->
   <script src="js/lead-filter-schema.js"></script>
