@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="lead-actions.css">
   <link rel="stylesheet" href="duplicate-indicator.css">
   <link rel="stylesheet" href="inbox-styles.css">
+  <link rel="stylesheet" href="master-safety.css">
+  <link rel="stylesheet" href="insurance-quotes.css">
+  <link rel="stylesheet" href="master-recruiting.css">
 
 </head>
 
@@ -72,6 +75,18 @@
           <div class="ico"><img src="assets/inbox.png" alt="Inbox" style="width:22px; height:22px;" />
           </div>
           <div class="meta"><strong>Notification Center</strong><span>Messages & Tasks</span></div>
+        </button>
+        <button type="button" data-view="master-safety">
+          <div class="ico">🛡️</div>
+          <div class="meta"><strong>Master Safety</strong><span>Fleet Compliance</span></div>
+        </button>
+        <button type="button" data-view="master-recruiting">
+          <div class="ico">📊</div>
+          <div class="meta"><strong>Master Recruiting</strong><span>Recruiter Dashboard</span></div>
+        </button>
+        <button type="button" data-view="insurance-quotes">
+          <div class="ico">📝</div>
+          <div class="meta"><strong>Insurance Quotes</strong><span>Quote Requests</span></div>
         </button>
       </nav>
 
@@ -468,8 +483,20 @@
           </div>
         </div>
       </section>
-    </main>
 
+      <!-- Master Safety View -->
+      <section class="view-section" id="master-safety-view" style="display:none; min-height:80vh;"></section>
+
+      <!-- Insurance Quotes View -->
+      <section class="view-section" id="insurance-quotes-view" style="display:none;">
+        <!-- Insurance Quotes UI will be populated by JS -->
+      </section>
+
+      <section class="view-section" id="master-recruiting-view" style="display:none;">
+        <!-- Master Recruiting Dashboard UI will be populated by JS -->
+      </section>
+    </main>
+  </div>
     <!-- Filter Modal -->
     <div class="filter-modal-backdrop" id="filterModalBackdrop">
       <div class="filter-modal">
@@ -689,6 +716,11 @@
   <script src="leadModal.js"></script>
   <script src="chat_logic_clean.js"></script>
   <script src="inbox_logic.js"></script>
+  <script src="master-safety.js"></script>
+  <script src="insurance-quotes.js"></script>
+  <script src="master-recruiting.js"></script>
+
+  <!-- Final app integration script -->
 </body>
 
 </html>

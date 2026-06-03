@@ -1,0 +1,610 @@
+/* =====================================================
+   MASTER SAFETY DASHBOARD — master-safety.css
+   Integriše se sa Hanse dizajn sistemom
+   ===================================================== */
+
+/* ---- Layout ---- */
+.ms-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: inherit;
+}
+
+/* ---- Header ---- */
+.ms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.ms-header-left h1 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy, #0f172a);
+  margin: 0 0 4px 0;
+}
+.ms-header-left p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+.ms-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.ms-search {
+  padding: 9px 14px 9px 36px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 12px center;
+  width: 220px;
+  transition: border-color .2s;
+  color: var(--navy, #0f172a);
+}
+.ms-search:focus { outline: none; border-color: #2f5ea9; }
+
+.ms-filter-select {
+  padding: 9px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--navy, #0f172a);
+  cursor: pointer;
+}
+
+/* ---- KPI Row ---- */
+.ms-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+@media (max-width: 1200px) { .ms-kpi-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .ms-kpi-row { grid-template-columns: repeat(2, 1fr); } }
+
+.ms-kpi-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.ms-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.ms-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--kpi-color, #2f5ea9);
+}
+.ms-kpi-icon {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.ms-kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy, #0f172a);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.ms-kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ms-kpi-sub {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+.ms-kpi-card.blue  { --kpi-color: #2f5ea9; }
+.ms-kpi-card.green { --kpi-color: #22c55e; }
+.ms-kpi-card.yellow { --kpi-color: #f59e0b; }
+.ms-kpi-card.red   { --kpi-color: #ef4444; }
+.ms-kpi-card.orange { --kpi-color: #f97316; }
+.ms-kpi-card.purple { --kpi-color: #8b5cf6; }
+
+/* ---- Alert Banner ---- */
+.ms-alert-banner {
+  background: linear-gradient(135deg, #fef2f2, #fff5f5);
+  border: 1px solid #fecaca;
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ms-alert-banner.warning {
+  background: linear-gradient(135deg, #fffbeb, #fefce8);
+  border-color: #fde68a;
+  border-left-color: #f59e0b;
+}
+.ms-alert-icon { font-size: 18px; }
+.ms-alert-text { font-size: 13px; font-weight: 600; color: #0f172a; }
+.ms-alert-sub { font-size: 12px; color: #64748b; margin-top: 2px; }
+
+/* ---- Sub Tabs ---- */
+.ms-sub-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+.ms-sub-tab {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.ms-sub-tab:hover { color: #0f172a; background: #fff; }
+.ms-sub-tab.active {
+  background: #fff;
+  color: #2f5ea9;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.ms-sub-tab .tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  background: #ef4444;
+  color: #fff;
+}
+.ms-sub-tab .tab-badge.yellow { background: #f59e0b; }
+.ms-sub-tab .tab-badge.blue { background: #2f5ea9; }
+
+/* ---- Driver Cards Grid ---- */
+.ms-drivers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---- Driver Card ---- */
+.ms-driver-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.ms-driver-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); }
+.ms-driver-card.status-critical { border-left: 4px solid #ef4444; }
+.ms-driver-card.status-warning  { border-left: 4px solid #f59e0b; }
+.ms-driver-card.status-compliant { border-left: 4px solid #22c55e; }
+.ms-driver-card.status-inactive { border-left: 4px solid #94a3b8; opacity: .8; }
+
+.ms-driver-header {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+.ms-driver-header:hover { background: #f8fafc; }
+
+.ms-driver-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.ms-driver-avatar.blue   { background: linear-gradient(135deg, #2f5ea9, #5aa7ff); }
+.ms-driver-avatar.green  { background: linear-gradient(135deg, #22c55e, #4ade80); }
+.ms-driver-avatar.red    { background: linear-gradient(135deg, #ef4444, #f87171); }
+.ms-driver-avatar.yellow { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.ms-driver-avatar.gray   { background: linear-gradient(135deg, #94a3b8, #cbd5e1); }
+
+.ms-driver-name-col { min-width: 0; }
+.ms-driver-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+.ms-driver-name:hover { color: #2f5ea9; text-decoration: underline; }
+.ms-driver-meta {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.ms-driver-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ms-driver-status-badge.compliant { background: #dcfce7; color: #166534; }
+.ms-driver-status-badge.warning   { background: #fef3c7; color: #92400e; }
+.ms-driver-status-badge.critical  { background: #fee2e2; color: #991b1b; }
+.ms-driver-status-badge.inactive  { background: #f1f5f9; color: #64748b; }
+
+.ms-compliance-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 90px;
+}
+.ms-compliance-pct {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy, #0f172a);
+}
+.ms-compliance-bar-bg {
+  width: 80px;
+  height: 5px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.ms-compliance-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .4s;
+}
+.ms-compliance-bar-fill.high  { background: #22c55e; }
+.ms-compliance-bar-fill.mid   { background: #f59e0b; }
+.ms-compliance-bar-fill.low   { background: #ef4444; }
+
+.ms-safety-score-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 60px;
+}
+.ms-safety-score-num {
+  font-size: 20px;
+  font-weight: 800;
+}
+.ms-safety-score-num.high   { color: #22c55e; }
+.ms-safety-score-num.mid    { color: #f59e0b; }
+.ms-safety-score-num.low    { color: #ef4444; }
+.ms-safety-score-label {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ms-expand-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all .2s;
+  flex-shrink: 0;
+  color: #64748b;
+}
+.ms-expand-btn:hover { background: #e2e8f0; }
+.ms-expand-btn.open { transform: rotate(180deg); }
+
+/* ---- Driver Card Body (expanded) ---- */
+.ms-driver-body {
+  display: none;
+  border-top: 1px solid #f1f5f9;
+  padding: 20px;
+  background: #fafafa;
+}
+.ms-driver-body.open { display: block; }
+
+.ms-driver-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) { .ms-driver-body-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .ms-driver-body-grid { grid-template-columns: 1fr; } }
+
+.ms-doc-section h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin: 0 0 12px 0;
+}
+
+/* ---- Document Status Items ---- */
+.ms-doc-list { display: flex; flex-direction: column; gap: 8px; }
+.ms-doc-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.ms-doc-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.ms-doc-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ms-doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.ms-doc-badge.valid    { background: #dcfce7; color: #166534; }
+.ms-doc-badge.expiring { background: #fef3c7; color: #92400e; }
+.ms-doc-badge.expired  { background: #fee2e2; color: #991b1b; }
+.ms-doc-badge.missing  { background: #f1f5f9; color: #475569; }
+.ms-doc-date { font-size: 11px; color: #94a3b8; }
+.ms-doc-countdown {
+  font-size: 10px;
+  font-weight: 600;
+}
+.ms-doc-countdown.expiring { color: #f59e0b; }
+.ms-doc-countdown.expired  { color: #ef4444; }
+.ms-doc-countdown.valid    { color: #22c55e; }
+
+/* ---- Violations / Notes Section ---- */
+.ms-violation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  margin-bottom: 8px;
+}
+.ms-violation-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.ms-violation-dot.warning { background: #f59e0b; }
+.ms-violation-text { font-size: 12px; color: #0f172a; font-weight: 500; }
+.ms-violation-date { font-size: 11px; color: #94a3b8; }
+
+.ms-no-violations {
+  padding: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #22c55e;
+  font-weight: 600;
+  background: #dcfce7;
+  border-radius: 8px;
+}
+
+/* ---- Open Profile Button ---- */
+.ms-open-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #2f5ea9;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background .2s;
+  text-decoration: none;
+}
+.ms-open-profile-btn:hover { background: #1e4080; }
+
+/* ---- Empty State ---- */
+.ms-empty-state {
+  text-align: center;
+  padding: 60px 24px;
+  color: #94a3b8;
+}
+.ms-empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.ms-empty-state p { font-size: 14px; font-weight: 500; }
+
+/* ---- Charts Row ---- */
+.ms-charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) { .ms-charts-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .ms-charts-row { grid-template-columns: 1fr; } }
+
+.ms-chart-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border: 1px solid #f1f5f9;
+}
+.ms-chart-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+/* CSS Bar Chart */
+.ms-bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+.ms-bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.ms-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: height .4s;
+}
+.ms-bar.green  { background: #22c55e; }
+.ms-bar.yellow { background: #f59e0b; }
+.ms-bar.red    { background: #ef4444; }
+.ms-bar.blue   { background: #2f5ea9; }
+.ms-bar-label { font-size: 9px; color: #94a3b8; margin-top: 4px; text-align: center; font-weight: 600; }
+
+/* Donut-style compliance */
+.ms-donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ms-donut {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.ms-donut-legend { display: flex; flex-direction: column; gap: 8px; margin-left: 10px; }
+.ms-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+.ms-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---- Explainer Box ---- */
+.ms-info-box {
+  background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.ms-info-box h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e40af;
+  margin: 0 0 10px 0;
+}
+.ms-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.ms-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ms-info-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.ms-info-text { font-size: 12px; color: #334155; }
+.ms-info-text strong { color: #1e40af; }
+
+/* ---- Recruiter filter pills ---- */
+.ms-filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.ms-filter-pill {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all .15s;
+}
+.ms-filter-pill:hover { border-color: #2f5ea9; color: #2f5ea9; }
+.ms-filter-pill.active { background: #2f5ea9; color: #fff; border-color: #2f5ea9; }
+
+/* Dark mode support */
+body.dark-mode .ms-kpi-card,
+body.dark-mode .ms-driver-card,
+body.dark-mode .ms-chart-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+body.dark-mode .ms-driver-header:hover { background: #0f172a; }
+body.dark-mode .ms-driver-body { background: #0f172a; }
+body.dark-mode .ms-doc-item,
+body.dark-mode .ms-violation-item { background: #1e293b; }
+body.dark-mode .ms-kpi-value,
+body.dark-mode .ms-driver-name,
+body.dark-mode .ms-compliance-pct { color: #f1f5f9; }
+body.dark-mode .ms-sub-tabs { background: #0f172a; border-color: #334155; }
+body.dark-mode .ms-sub-tab.active { background: #1e293b; }
+body.dark-mode .ms-search,
+body.dark-mode .ms-filter-select { background: #1e293b; border-color: #334155; color: #f1f5f9; }
+body.dark-mode .ms-info-box { background: #1e3a5f; border-color: #2563eb; }

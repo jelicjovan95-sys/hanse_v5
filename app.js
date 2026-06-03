@@ -40,7 +40,8 @@ const els = {
   execDeptStats: document.getElementById("execDeptStats"),
   execLeaderboardBody: document.getElementById("execLeaderboardBody"),
   employeeDetailModal: document.getElementById("employeeDetailModal"),
-  inboxView: document.getElementById("inbox-view")
+  inboxView: document.getElementById('inbox-view'),
+  masterSafetyView: document.getElementById('master-safety-view')
 };
 
 // Lead Dashboard data
@@ -346,18 +347,14 @@ const leads = [
 ];
 
 // Safety columns and drivers data
-const safetyColumns = [
-  { id: 'recruiting-approval', title: 'Recruiting Request for Approval' },
-  { id: 'driver-ready', title: 'Driver Ready' },
-  { id: 'medical-alert', title: 'Medical Alert' },
-  { id: 'registration-alert', title: 'Registration Alert' },
-  { id: 'active-drivers', title: 'Active Drivers' },
-  { id: 'active-units', title: 'Active Units' },
-  { id: 'terminated-drivers', title: 'Terminated Drivers' },
-  { id: 'inactive-units', title: 'Inactive Units' }
+let safetyColumns = [
+  { id: 'recruiting-approval', title: 'Recruiting Request for Approval', editable: false },
+  { id: 'critical-alert', title: 'Critical Alert', editable: false },
+  { id: 'active-drivers', title: 'Active Drivers', editable: false },
+  { id: 'pending-removal', title: 'Pending removal', editable: false }
 ];
 
-const safetyDrivers = [
+let safetyDrivers = [
   // Recruiting Request for Approval (5)
   { id: 'safe-1', firstName: 'David', lastName: 'Williams', email: 'david.w@example.com', phone: '555-0101', column: 'recruiting-approval', tags: ['Safety Pending'], statusDots: [true, true, true, false], truckId: '', driverType: 'OTR', yearsExperience: 5 },
   { id: 'safe-2', firstName: 'James', lastName: 'Brown', email: 'james.b@example.com', phone: '555-0102', column: 'recruiting-approval', tags: ['Hot Lead'], statusDots: [true, true, false, false], truckId: '', driverType: 'Regional', yearsExperience: 3 },
@@ -365,17 +362,15 @@ const safetyDrivers = [
   { id: 'safe-4', firstName: 'Michael', lastName: 'Miller', email: 'michael.m@example.com', phone: '555-0104', column: 'recruiting-approval', tags: ['Review Needed'], statusDots: [true, true, true, false], truckId: '', driverType: 'Local', yearsExperience: 4 },
   { id: 'safe-5', firstName: 'William', lastName: 'Davis', email: 'william.d@example.com', phone: '555-0105', column: 'recruiting-approval', tags: [], statusDots: [true, true, false, false], truckId: '', driverType: 'OTR', yearsExperience: 6 },
 
-  // Driver Ready (3)
-  { id: 'safe-6', firstName: 'Richard', lastName: 'Garcia', email: 'richard.g@example.com', phone: '555-0106', column: 'driver-ready', tags: ['Ready Next Week'], statusDots: [true, true, true, true], truckId: 'T-101', driverType: 'OTR', yearsExperience: 10 },
-  { id: 'safe-7', firstName: 'Joseph', lastName: 'Rodriguez', email: 'joseph.r@example.com', phone: '555-0107', column: 'driver-ready', tags: ['Ready This Week'], statusDots: [true, true, true, true], truckId: 'T-102', driverType: 'Regional', yearsExperience: 8 },
-  { id: 'safe-8', firstName: 'Thomas', lastName: 'Wilson', email: 'thomas.w@example.com', phone: '555-0108', column: 'driver-ready', tags: ['Ready This Month'], statusDots: [true, true, true, true], truckId: 'T-103', driverType: 'Local', yearsExperience: 5 },
+  // Critical Alert (3)
+  { id: 'safe-9', firstName: 'Charles', lastName: 'Martinez', email: 'charles.m@example.com', phone: '555-0109', column: 'critical-alert', tags: ['Medical Expiring'], statusDots: [true, true, true, true], truckId: 'T-200', driverType: 'OTR', yearsExperience: 12 },
+  { id: 'safe-10', firstName: 'Daniel', lastName: 'Anderson', email: 'daniel.a@example.com', phone: '555-0110', column: 'critical-alert', tags: ['Reg Expiring'], statusDots: [true, true, true, true], truckId: 'T-201', driverType: 'Regional', yearsExperience: 9 },
+  { id: 'safe-11', firstName: 'Matthew', lastName: 'Taylor', email: 'matthew.t@example.com', phone: '555-0111', column: 'critical-alert', tags: ['Reg Missing'], statusDots: [true, true, true, true], truckId: 'T-202', driverType: 'OTR', yearsExperience: 4 },
 
-  // Medical Alert (1)
-  { id: 'safe-9', firstName: 'Charles', lastName: 'Martinez', email: 'charles.m@example.com', phone: '555-0109', column: 'medical-alert', tags: ['Medical Expiring'], statusDots: [true, true, true, true], truckId: 'T-200', driverType: 'OTR', yearsExperience: 12 },
-
-  // Registration Alert (2)
-  { id: 'safe-10', firstName: 'Daniel', lastName: 'Anderson', email: 'daniel.a@example.com', phone: '555-0110', column: 'registration-alert', tags: ['Reg Expiring'], statusDots: [true, true, true, true], truckId: 'T-201', driverType: 'Regional', yearsExperience: 9 },
-  { id: 'safe-11', firstName: 'Matthew', lastName: 'Taylor', email: 'matthew.t@example.com', phone: '555-0111', column: 'registration-alert', tags: ['Reg Missing'], statusDots: [true, true, true, true], truckId: 'T-202', driverType: 'OTR', yearsExperience: 4 }
+  // Active Drivers (3)
+  { id: 'safe-6', firstName: 'Richard', lastName: 'Garcia', email: 'richard.g@example.com', phone: '555-0106', column: 'active-drivers', tags: ['Ready Next Week'], statusDots: [true, true, true, true], truckId: 'T-101', driverType: 'OTR', yearsExperience: 10 },
+  { id: 'safe-7', firstName: 'Joseph', lastName: 'Rodriguez', email: 'joseph.r@example.com', phone: '555-0107', column: 'active-drivers', tags: ['Ready This Week'], statusDots: [true, true, true, true], truckId: 'T-102', driverType: 'Regional', yearsExperience: 8 },
+  { id: 'safe-8', firstName: 'Thomas', lastName: 'Wilson', email: 'thomas.w@example.com', phone: '555-0108', column: 'active-drivers', tags: ['Ready This Month'], statusDots: [true, true, true, true], truckId: 'T-103', driverType: 'Local', yearsExperience: 5 }
 ];
 
 // Fleet columns and drivers data
@@ -2673,37 +2668,113 @@ function openDuplicateModal(leadId) {
 }
 
 // -------------------------
+// Safety Board Column Management
+// -------------------------
+function addNewSafetyColumn() {
+  const newId = 'custom-safety-' + Date.now();
+  safetyColumns.push({
+    id: newId,
+    title: 'New Column',
+    editable: true
+  });
+  renderSafetyBoard();
+}
+
+function updateSafetyColumnTitle(colId, newTitle) {
+  const col = safetyColumns.find(c => c.id === colId);
+  if (col) {
+    col.title = newTitle;
+  }
+}
+
+function removeSafetyColumn(colId) {
+  if (confirm('Are you sure you want to remove this column? All drivers in it will stay but the column will disappear.')) {
+    safetyColumns = safetyColumns.filter(c => c.id !== colId);
+    renderSafetyBoard();
+  }
+}
+
+function moveSafetyDriver(driverId, targetColId) {
+  const driver = safetyDrivers.find(d => d.id === driverId);
+  if (driver) {
+    driver.column = targetColId;
+    renderSafetyBoard();
+  }
+}
+
+// -------------------------
 // Safety Board
 // -------------------------
 function renderSafetyBoard() {
   if (!els.safetyBoard) return;
 
   els.safetyBoard.innerHTML = '';
+  els.safetyBoard.className = 'funnel'; // Use kanban classes
 
   safetyColumns.forEach(col => {
-    const column = document.createElement('div');
-    column.className = 'funnel-column';
-    column.dataset.columnId = col.id;
+    const colEl = document.createElement('div');
+    colEl.className = 'funnel-column';
+    colEl.dataset.columnId = col.id;
 
-    const title = document.createElement('div');
-    title.className = 'column-title';
-    title.textContent = col.title;
+    // Drag/Drop
+    colEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      colEl.classList.add('drag-over');
+    });
+    colEl.addEventListener('dragleave', () => {
+      colEl.classList.remove('drag-over');
+    });
+    colEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      colEl.classList.remove('drag-over');
+      const driverId = e.dataTransfer.getData('text/plain');
+      // Ensure we are dropping a safety driver
+      const driver = safetyDrivers.find(d => d.id === driverId);
+      if (driver && driver.column !== col.id) {
+        moveSafetyDriver(driverId, col.id);
+      }
+    });
 
-    const cards = document.createElement('div');
-    cards.className = 'funnel-cards';
+    let titleHtml = `<div class="column-title">${col.title}</div>`;
+    if (col.editable) {
+      titleHtml = `<input type="text" class="column-title-input" value="${col.title}" onblur="updateSafetyColumnTitle('${col.id}', this.value)" onkeypress="if(event.key==='Enter') this.blur()">`;
+    }
 
+    let headerActionsHtml = '';
+    if (col.editable) {
+      headerActionsHtml = `<span class="column-delete-btn" onclick="event.stopPropagation(); removeSafetyColumn('${col.id}')" title="Remove Column">×</span>`;
+    }
+
+    colEl.innerHTML = `
+      <div class="column-header">
+        ${titleHtml}
+        <div class="header-right-meta">
+            <div class="column-count">${safetyDrivers.filter(d => d.column === col.id).length}</div>
+            ${headerActionsHtml}
+        </div>
+      </div>
+      <div class="funnel-cards"></div>
+    `;
+
+    const cardsContainer = colEl.querySelector('.funnel-cards');
     const driversInColumn = safetyDrivers.filter(d => d.column === col.id);
 
     driversInColumn.forEach(driver => {
-      cards.appendChild(renderRecruitingCard(driver));
+      cardsContainer.appendChild(renderRecruitingCard(driver)); // We reuse recruiting cards
     });
 
-
-
-    column.appendChild(title);
-    column.appendChild(cards);
-    els.safetyBoard.appendChild(column);
+    els.safetyBoard.appendChild(colEl);
   });
+
+  // Add Column Button
+  const addColBtn = document.createElement('div');
+  addColBtn.className = 'add-column-column';
+  addColBtn.innerHTML = `
+    <div class="add-column-spacer"></div>
+    <button class="add-column-circle-btn" onclick="addNewSafetyColumn()" title="Add New Column">+</button>
+    <div class="add-column-spacer"></div>
+  `;
+  els.safetyBoard.appendChild(addColBtn);
 }
 
 // -------------------------
@@ -3315,6 +3386,11 @@ function switchView(viewName) {
   if (els.earningsView) els.earningsView.style.display = 'none';
   if (els.execDashboardView) els.execDashboardView.style.display = 'none';
   if (els.inboxView) els.inboxView.style.display = 'none';
+  if (els.masterSafetyView) els.masterSafetyView.style.display = 'none';
+  const iqView = document.getElementById('insurance-quotes-view');
+  if (iqView) iqView.style.display = 'none';
+  const mrView = document.getElementById('master-recruiting-view');
+  if (mrView) mrView.style.display = 'none';
 
   // Show selected view
   switch (viewName) {
@@ -3353,6 +3429,22 @@ function switchView(viewName) {
     case 'inbox':
       if (els.inboxView) els.inboxView.style.display = 'block';
       if (typeof renderInboxList === 'function') renderInboxList();
+      break;
+    case 'master-safety':
+      if (els.masterSafetyView) els.masterSafetyView.style.display = 'block';
+      if (typeof renderMasterSafety === 'function') renderMasterSafety();
+      break;
+    case 'insurance-quotes':
+      if (iqView) iqView.style.display = 'block';
+      if (typeof initInsuranceQuotes === 'function' && iqView && !iqView.querySelector('.iq-container')) {
+        initInsuranceQuotes();
+      }
+      break;
+    case 'master-recruiting':
+      if (mrView) mrView.style.display = 'block';
+      if (typeof initMasterRecruiting === 'function' && mrView && !mrView.querySelector('.mr-dashboard')) {
+        initMasterRecruiting();
+      }
       break;
   }
 

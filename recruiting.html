@@ -86,7 +86,7 @@
         }
 
         .lead-card {
-            background: #fff;
+            background: var(--surface);
             border: 1px solid rgba(15, 23, 42, .12);
             border-radius: 12px;
             padding: 12px;
@@ -201,7 +201,7 @@
             width: 90%;
             max-width: 1300px;
             height: 90vh;
-            background: #fff;
+            background: var(--surface);
             border-radius: 20px;
             box-shadow: 0 25px 100px rgba(0, 0, 0, .30);
             display: grid;
@@ -431,7 +431,7 @@
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            background: #fff;
+            background: var(--surface);
             border-bottom: 1px solid transparent;
             transition: background .2s, border-color .2s;
         }
@@ -441,7 +441,7 @@
         .collapsible-content {
             padding: 16px;
             display: none;
-            background: #fff;
+            background: var(--surface);
             border-top: 1px solid rgba(15, 23, 42, .08);
         }
         .collapsible-section.open .collapsible-content {
@@ -496,7 +496,7 @@
             background: rgba(15, 23, 42, .02);
         }
         .cdl-bracket.dragover {
-            background: #fff;
+            background: var(--surface);
             border-color: var(--blue);
             box-shadow: 0 0 0 4px rgba(47, 94, 169, .1);
         }
@@ -899,7 +899,7 @@
                 <div class="cdl-bracket" ondragover="this.classList.add('dragover'); event.preventDefault();" ondragleave="this.classList.remove('dragover');" ondrop="handleDrop(event, 'cdl', this);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <div class="field-label" style="margin: 0; color: var(--blue);">COMMERCIAL DRIVER'S LICENSE (CDL)</div>
-                        <div style="font-size: 11px; color: var(--muted); background: #fff; padding: 4px 8px; border-radius: 6px; border: 1px dashed rgba(0,0,0,0.1);">Drag & Drop Document Here</div>
+                        <div style="font-size: 11px; color: var(--muted); background: var(--surface); padding: 4px 8px; border-radius: 6px; border: 1px dashed rgba(0,0,0,0.1);">Drag & Drop Document Here</div>
                     </div>
                     
                     <div class="form-grid-3">
