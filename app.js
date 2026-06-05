@@ -348,9 +348,7 @@ const leads = [
 
 // Safety columns and drivers data
 let safetyColumns = [
-  { id: 'recruiting-approval', title: 'Recruiting Request for Approval', editable: false },
   { id: 'critical-alert', title: 'Critical Alert', editable: false },
-  { id: 'active-drivers', title: 'Active Drivers', editable: false },
   { id: 'pending-removal', title: 'Pending removal', editable: false }
 ];
 
@@ -2670,14 +2668,69 @@ function openDuplicateModal(leadId) {
 // -------------------------
 // Safety Board Column Management
 // -------------------------
-function addNewSafetyColumn() {
-  const newId = 'custom-safety-' + Date.now();
-  safetyColumns.push({
-    id: newId,
-    title: 'New Column',
-    editable: true
-  });
-  renderSafetyBoard();
+function showAddSafetyColumnModal() {
+  const backdrop = document.createElement('div');
+  backdrop.style.position = 'fixed';
+  backdrop.style.top = '0'; backdrop.style.left = '0';
+  backdrop.style.width = '100vw'; backdrop.style.height = '100vh';
+  backdrop.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  backdrop.style.display = 'flex'; backdrop.style.alignItems = 'center'; backdrop.style.justifyContent = 'center';
+  backdrop.style.zIndex = '10000';
+
+  const presets = ['Medical Expiring', 'Reg Expiring', 'Reg Missing', 'Safety Pending', 'Review Needed', 'Ready This Week', 'Ready Next Week'];
+
+  backdrop.innerHTML = `
+    <div style="background:white; border-radius:12px; padding:24px; width:400px; max-width:90vw; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <h3 style="margin:0 0 16px 0; font-size:18px; font-weight:800; color:var(--text);">Add New Safety Column</h3>
+      
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:8px;">Choose Column Type</label>
+        <select id="newSafeColType" onchange="document.getElementById('newSafeColName').style.display = this.value === 'Custom' ? 'block' : 'none';" style="width:100%; padding:10px; border:1px solid var(--border-dark); border-radius:8px; font-weight:600; font-size:14px; outline:none;">
+          <option value="Custom">Custom Column</option>
+          <optgroup label="Preset Tags (Auto-pull)">
+            ${presets.map(p => `<option value="${p}">${p}</option>`).join('')}
+          </optgroup>
+        </select>
+      </div>
+
+      <div style="margin-bottom:24px;">
+        <input type="text" id="newSafeColName" placeholder="Enter custom column name..." style="width:100%; padding:10px; border:1px solid var(--border-dark); border-radius:8px; font-weight:600; font-size:14px; outline:none; display:block;">
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:12px;">
+        <button onclick="this.closest('.backdrop-remove').remove()" style="background:var(--surface2); color:var(--text); border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Cancel</button>
+        <button id="confirmSafeColBtn" style="background:var(--blue); color:white; border:none; padding:8px 16px; border-radius:6px; font-weight:700; cursor:pointer;">Add Column</button>
+      </div>
+    </div>
+  `;
+  
+  backdrop.classList.add('backdrop-remove');
+  document.body.appendChild(backdrop);
+
+  document.getElementById('confirmSafeColBtn').onclick = () => {
+    const type = document.getElementById('newSafeColType').value;
+    const customName = document.getElementById('newSafeColName').value;
+    const colName = type === 'Custom' ? (customName || 'New Column') : type;
+    
+    const newId = 'custom-safety-' + Date.now();
+    safetyColumns.push({
+      id: newId,
+      title: colName,
+      editable: true
+    });
+
+    if (type !== 'Custom') {
+      // Auto-pull drivers with this tag into the new column
+      safetyDrivers.forEach(d => {
+        if (d.tags && d.tags.includes(type)) {
+          d.column = newId;
+        }
+      });
+    }
+
+    renderSafetyBoard();
+    backdrop.remove();
+  };
 }
 
 function updateSafetyColumnTitle(colId, newTitle) {
@@ -2771,7 +2824,7 @@ function renderSafetyBoard() {
   addColBtn.className = 'add-column-column';
   addColBtn.innerHTML = `
     <div class="add-column-spacer"></div>
-    <button class="add-column-circle-btn" onclick="addNewSafetyColumn()" title="Add New Column">+</button>
+    <button class="add-column-circle-btn" onclick="showAddSafetyColumnModal()" title="Add New Column">+</button>
     <div class="add-column-spacer"></div>
   `;
   els.safetyBoard.appendChild(addColBtn);

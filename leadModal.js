@@ -573,6 +573,7 @@ function _renderFullModal(lead) {
                                     <th style="padding: 8px 12px; color: var(--muted); font-weight: 600;">Description</th>
                                     <th style="padding: 8px 12px; color: var(--muted); font-weight: 600;">Status</th>
                                     <th style="padding: 8px 12px; color: var(--muted); font-weight: 600;">Cost</th>
+                                    <th style="padding: 8px 12px; color: var(--muted); font-weight: 600; width:60px;"></th>
                                 </tr>
                             </thead>
                             <tbody id="claims-history-body-${lead.id}">
@@ -803,10 +804,10 @@ window.toggleClaimsHistory = function(leadId, category) {
     
     // Mock Data Store
     const mockData = [
-        { date: '2/14/2026', desc: 'Slid off road', status: 'Open', cost: '$15,000' },
-        { date: '9/01/2025', desc: 'Backed into trailer', status: 'Pending', cost: '$4,500' },
-        { date: '1/15/2025', desc: 'Minor scratch', status: 'Closed', cost: '$800' },
-        { date: '5/20/2024', desc: 'Mirror broken', status: 'Closed', cost: '$500' },
+        { id: 0, date: '2/14/2026', desc: 'Slid off road', status: 'Open', cost: '$15,000' },
+        { id: 1, date: '9/01/2025', desc: 'Backed into trailer', status: 'Pending', cost: '$4,500' },
+        { id: 2, date: '1/15/2025', desc: 'Minor scratch', status: 'Closed', cost: '$800' },
+        { id: 3, date: '5/20/2024', desc: 'Mirror broken', status: 'Closed', cost: '$500' },
     ];
 
     if (grid && history) {
@@ -842,6 +843,9 @@ window.toggleClaimsHistory = function(leadId, category) {
                                 </span>
                             </td>
                             <td style="padding: 12px; font-weight: 800; color: var(--text);">${d.cost}</td>
+                            <td style="padding: 12px; text-align:right;">
+                                <button onclick="openClaimWorkspaceFromLead(${d.id})" style="background:var(--surface2); border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700; color:var(--text); cursor:pointer;">View</button>
+                            </td>
                         </tr>
                         `;
                     }).join('');
@@ -851,6 +855,30 @@ window.toggleClaimsHistory = function(leadId, category) {
             grid.style.display = 'none';
             history.style.display = 'block';
         }
+    }
+};
+
+window.openClaimWorkspaceFromLead = function(claimId) {
+    // Hide Lead Modal properly
+    if (typeof closeRecruitingModal === 'function') {
+        // bypass dirty check if needed or just call it
+        isDirty = false;
+        closeRecruitingModal();
+    } else {
+        const modal = document.getElementById('modalBackdropRecruiting');
+        if (modal) modal.classList.remove('open');
+        document.body.classList.remove('lead-modal-open');
+    }
+
+    // Switch to Master Safety View
+    if (typeof switchView === 'function') {
+        switchView('master-safety');
+    }
+
+    // Open the claim
+    if (typeof msOpenClaimWorkspace === 'function') {
+        msActiveTab = 'claims';
+        msOpenClaimWorkspace(claimId);
     }
 };
 

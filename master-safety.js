@@ -242,6 +242,12 @@ window.msSetClaimsView = function(view) {
 window.msOpenClaimWorkspace = function(id) {
   msActiveClaimWorkspaceId = parseInt(id);
   renderMasterSafety();
+  setTimeout(() => {
+    const ws = document.getElementById('active-claim-workspace');
+    if (ws) {
+        ws.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 50);
 };
 window.msCloseClaimWorkspace = function() {
   msActiveClaimWorkspaceId = null;
@@ -1020,7 +1026,7 @@ function msRenderClaimsTab() {
 // ==========================================
 function msRenderClaimWorkspace(claim) {
   return `
-    <div style="background:var(--surface); border-radius:16px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+    <div id="active-claim-workspace" style="background:var(--surface); border-radius:16px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
        ${msRenderClaimHeader(claim)}
        <div style="display:flex; min-height:800px;">
           <!-- Left Column: Details -->
@@ -1150,6 +1156,22 @@ function msRenderAccidentDetails(c) {
              <label style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--text); cursor:pointer;">
                 <input type="checkbox" onchange="msUpdateNestedClaimField('${c.id}', 'accident.injuries', this.checked ? 'Yes' : 'No')" ${acc.injuries === 'Yes' ? 'checked' : ''} style="width:16px; height:16px; cursor:pointer;"> Injuries
              </label>
+          </div>
+          
+          <div style="grid-column: span 3; border-top:1px solid var(--border); margin-top:8px; padding-top:16px; display:flex; justify-content:space-between; align-items:flex-end;">
+             <div style="width: 200px;">
+                <span style="font-size:11px; color:var(--muted); text-transform:uppercase; font-weight:700;">Fault Determination</span>
+                <select onchange="msUpdateNestedClaimField('${c.id}', 'accident.fault', this.value)" style="width:100%; padding:8px 12px; border:1px solid var(--border-dark); border-radius:8px; font-size:13px; font-weight:600; outline:none; margin-top:4px;">
+                   <option value="Unknown" ${!acc.fault || acc.fault === 'Unknown' ? 'selected' : ''}>Unknown</option>
+                   <option value="At Fault" ${acc.fault === 'At Fault' ? 'selected' : ''}>At Fault (Our Driver)</option>
+                   <option value="Not At Fault" ${acc.fault === 'Not At Fault' ? 'selected' : ''}>Not At Fault (Third Party)</option>
+                </select>
+             </div>
+             <div>
+                <button onclick="window.location.href='mailto:?subject=Claim Notification: ${c.claimId} - ${c.driver}&body=Hello,%0A%0APlease find the details for Claim ${c.claimId} involving driver ${c.driver}.%0A%0AFault Determination: ${acc.fault || 'Unknown'}.%0A%0AThank you.'" style="background:var(--blue); color:white; border:none; padding:10px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;">
+                   ✉ ${acc.fault === 'Not At Fault' ? 'Send to Third-Party Insurance' : 'Send to Our Insurance'}
+                </button>
+             </div>
           </div>
        </div>
     </div>
