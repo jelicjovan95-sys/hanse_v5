@@ -3444,6 +3444,8 @@ function switchView(viewName) {
   if (iqView) iqView.style.display = 'none';
   const mrView = document.getElementById('master-recruiting-view');
   if (mrView) mrView.style.display = 'none';
+  const cpView = document.getElementById('company-profile-view');
+  if (cpView) cpView.style.display = 'none';
 
   // Show selected view
   switch (viewName) {
