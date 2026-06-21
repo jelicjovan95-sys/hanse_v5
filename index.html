@@ -977,6 +977,107 @@
     </div>
   </div>
 
+  <!-- Edit Company Modal -->
+  <div class="cp-modal-overlay" id="editCompanyModal">
+    <div class="cp-modal" style="width:400px;">
+      <div class="cp-modal-header">
+        <h3>Edit Company</h3>
+        <button class="cp-modal-close" onclick="closeEditCompanyModal()">x</button>
+      </div>
+      <div class="cp-modal-body">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Legal Name</label>
+        <input type="text" id="editCompLegalName" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">DBA Name</label>
+        <input type="text" id="editCompDbaName" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">DOT #</label>
+        <input type="text" id="editCompDot" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">MC #</label>
+        <input type="text" id="editCompMc" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <button class="cp-btn primary" onclick="syncWithFmcsa()" style="width:100%; padding:10px; display:flex; justify-content:center; align-items:center; gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.25 5.25"/></svg>
+          Sync with FMCSA
+        </button>
+      </div>
+      <div class="cp-modal-footer">
+        <button class="cp-btn" onclick="closeEditCompanyModal()">Cancel</button>
+        <button class="cp-btn primary" onclick="saveCompanyDetails()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Agent Modal -->
+  <div class="cp-modal-overlay" id="editAgentModal">
+    <div class="cp-modal" style="width:400px;">
+      <div class="cp-modal-header">
+        <h3>Edit Agent Information</h3>
+        <button class="cp-modal-close" onclick="closeEditAgentModal()">x</button>
+      </div>
+      <div class="cp-modal-body">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Agent Name</label>
+        <input type="text" id="editAgentName" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Agent Phone</label>
+        <input type="text" id="editAgentPhone" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+        
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Agent Email</label>
+        <input type="email" id="editAgentEmail" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+      </div>
+      <div class="cp-modal-footer">
+        <button class="cp-btn" onclick="closeEditAgentModal()">Cancel</button>
+        <button class="cp-btn primary" onclick="saveAgentDetails()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Department Modal -->
+  <div class="cp-modal-overlay" id="addCustomDeptModal">
+    <div class="cp-modal" style="width:400px;">
+      <div class="cp-modal-header">
+        <h3>Add Custom Department</h3>
+        <button class="cp-modal-close" onclick="closeAddCustomDeptModal()">x</button>
+      </div>
+      <div class="cp-modal-body">
+        <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Department Name</label>
+        <input type="text" id="customDeptName" placeholder="e.g. Accounting" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+      </div>
+      <div class="cp-modal-footer">
+        <button class="cp-btn" onclick="closeAddCustomDeptModal()">Cancel</button>
+        <button class="cp-btn primary" onclick="saveCustomDept()">Add Department</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Custom Charge Modal -->
+  <div class="cp-modal-overlay" id="addCustomChargeModal">
+    <div class="cp-modal" style="width:400px;">
+      <div class="cp-modal-header">
+        <h3 style="margin:0; font-size:16px;">Add Custom Charge</h3>
+        <button class="cp-modal-close" onclick="closeAddChargeModal()">x</button>
+      </div>
+      <div class="cp-modal-body">
+        <label style="display:block; margin-bottom:4px; font-size:12px; font-weight:600;">Code</label>
+        <input type="text" id="newChargeCode" placeholder="e.g. Z-1" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
+        
+        <label style="display:block; margin-bottom:4px; font-size:12px; font-weight:600;">Description</label>
+        <input type="text" id="newChargeDesc" placeholder="Description of the charge" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
+        
+        <label style="display:block; margin-bottom:4px; font-size:12px; font-weight:600;">Amount ($)</label>
+        <input type="number" id="newChargeAmt" placeholder="0.00" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
+        
+        <label style="display:block; margin-bottom:4px; font-size:12px; font-weight:600;">Frequency</label>
+        <input type="text" id="newChargeFreq" placeholder="e.g. Per Occurrence" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
+      </div>
+      <div class="cp-modal-footer">
+        <button class="cp-btn" onclick="closeAddChargeModal()">Cancel</button>
+        <button class="cp-btn primary" onclick="saveNewCustomCharge()">Save Charge</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Final app integration script -->
 </body>
 </html>

@@ -126,7 +126,8 @@ const companyProfileData = {
           { name: "Lazar Stojanovic", nick: "Randy Sones", phone: "(832) 478-4172", email: "", role: "Dispatcher", status: "active" },
           { name: "Milos Delevic", nick: "Wayne Delevic", phone: "(832) 482-2275", email: "", role: "Dispatcher", status: "active" },
           { name: "Vuk Vukanic", nick: "Vuk Vukanic", phone: "(832) 482-1893", email: "", role: "Dispatcher", status: "active" },
-          { name: "Nikola Banjac", nick: "Jake Banjac", phone: "(832) 446-0267", email: "", role: "Dispatcher", status: "active" }
+          { name: "Nikola Banjac", nick: "Jake Banjac", phone: "(832) 446-0267", email: "", role: "Dispatcher", status: "active" },
+          { name: "Jovan Jelic", nick: "Jovan Jelic", phone: "", email: "", role: "Dispatcher", status: "active", outsource: true }
         ]
       },
       {
@@ -199,11 +200,973 @@ const companyProfileData = {
       { name: "Scotlynn", reason: "Lifetime ban", mc: "", severity: "Lifetime Ban" },
       { name: "High Tide", reason: "unethical business / called driver / lied", mc: "", severity: "Internal Issue" },
       { name: "CW Carrier", reason: "unethical business practices", mc: "", severity: "Avoid" }
-    ]
+    ],
+    charges: [
+      {
+            "category": "Onboarding Charges and Deductions",
+            "code": "A-1",
+            "name": "Drug Test Fee",
+            "amount": 50,
+            "frequency": "Per test",
+            "applied": true
+      },
+      {
+            "category": "Onboarding Charges and Deductions",
+            "code": "A-2",
+            "name": "Orientation, Onboarding, Permitting...",
+            "amount": 150,
+            "frequency": "Once",
+            "applied": false
+      },
+      {
+            "category": "Onboarding Charges and Deductions",
+            "code": "A-3",
+            "name": "Equipment Registration",
+            "amount": 100,
+            "frequency": "Once",
+            "applied": false
+      },
+      {
+            "category": "Escrow Deductions & Charges",
+            "code": "B-1",
+            "name": "Escrow Deposit (per Driver)",
+            "amount": 2500,
+            "frequency": "Until replenished",
+            "applied": true
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-1",
+            "name": "Insurance Deductible - Auto Liability",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-2",
+            "name": "Insurance Deductible - Cargo Damage",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-3",
+            "name": "Insurance Deductible - Physical Damage",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-4",
+            "name": "Company Insurance Program Reimbursement",
+            "amount": 150,
+            "frequency": "Monthly",
+            "applied": true
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-5",
+            "name": "Premiums/Costs for Coverage Procured by Company",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Insurance Deductions & Charges",
+            "code": "C-6",
+            "name": "Cargo Claims, Shortages, and Salvage Charges",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-1",
+            "name": "Trailer Rental Fee",
+            "amount": 250,
+            "frequency": "Weekly",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-2",
+            "name": "Cleaning, Repair, Repositioning...",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-3",
+            "name": "Excessive Mileage Charges on Company Trailers",
+            "amount": 0.15,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-4",
+            "name": "Truck Keys - Not Returned / Damaged",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-5",
+            "name": "Fuel Card - Not Returned",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-6",
+            "name": "ELD / Logbook Tablet - Not Returned",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-7",
+            "name": "License Plate - Not Returned",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-8",
+            "name": "Company Stickers, Decals, and Logos - Not Returned",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-9",
+            "name": "Toll Transponder / Pass Device - Not Returned",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-10",
+            "name": "Dash Camera (if applicable) - Not Returned",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-11",
+            "name": "GPS Unit - Not Returned",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-12",
+            "name": "Interior Cab Cleaning (if truck returned dirty)",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-13",
+            "name": "Truck Binder (permits, decals, documents) - Not Returned",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-14",
+            "name": "Liquidated Damages for Failure to Return Equipment",
+            "amount": 1200,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Equipment, Trailer, and Carrier Property",
+            "code": "D-15",
+            "name": "Trailer Repair",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-1",
+            "name": "Quarterly IFTA Filing Charge",
+            "amount": 50,
+            "frequency": "Quarterly",
+            "applied": false
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-2",
+            "name": "IFTA Calculations & Obligation",
+            "amount": 0.05,
+            "frequency": "Weekly",
+            "applied": false
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-3",
+            "name": "Fuel Transaction Service Fee",
+            "amount": 2.5,
+            "frequency": "Per Transaction",
+            "applied": true
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-4",
+            "name": "Toll Violations",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-5",
+            "name": "Tolls - Routine",
+            "amount": 50,
+            "frequency": "Weekly",
+            "applied": true
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-6",
+            "name": "MVR Renewal / Motor Vehicle Records",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-7",
+            "name": "Permits, Base Plates, Registrations",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Compliance Charges",
+            "code": "E-8",
+            "name": "Citation / Ticket from Official Enforcement Officer",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fuel, Advances, and Road Expenses",
+            "code": "F-1",
+            "name": "Fuel Purchased on Company Card or Account",
+            "amount": 150,
+            "frequency": "Weekly",
+            "applied": true
+      },
+      {
+            "category": "Fuel, Advances, and Road Expenses",
+            "code": "F-2",
+            "name": "Cash Advances",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Fuel, Advances, and Road Expenses",
+            "code": "F-3",
+            "name": "Returned Payment / Failed ACH / Stop Payment",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Fuel, Advances, and Road Expenses",
+            "code": "F-4",
+            "name": "Off-Network Fueling Without Authorization",
+            "amount": 50,
+            "frequency": "Per Transaction",
+            "applied": true
+      },
+      {
+            "category": "Fuel, Advances, and Road Expenses",
+            "code": "F-5",
+            "name": "IFTA Manual Reconstruction Fee",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-1",
+            "name": "ELD / Telematics / Camera Program Fees",
+            "amount": 35,
+            "frequency": "Weekly",
+            "applied": true
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-2",
+            "name": "Dispatch / Administrative / Settlement Processing Fee",
+            "amount": 150,
+            "frequency": "Monthly",
+            "applied": true
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-3",
+            "name": "IFTA Reporting Service Fee",
+            "amount": 50,
+            "frequency": "Quarterly",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-4",
+            "name": "Continual Qualification Fees",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-5",
+            "name": "Investigation Fees",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-6",
+            "name": "Overpayments to Contractor",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-7",
+            "name": "Lease Payments Owed by Contractor",
+            "amount": 100,
+            "frequency": "Per Schedule",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-8",
+            "name": "TripPak Processing Fee",
+            "amount": 10,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Administrative and Program Fees",
+            "code": "G-9",
+            "name": "Direct Deposit Processing and Admin Fee",
+            "amount": 5,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-1",
+            "name": "Late Delivery Penalty / Missed Appointment Fee",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-2",
+            "name": "Re-Delivery Costs / Re-Consignment Fees",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-3",
+            "name": "Storage / Warehouse Charges",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-4",
+            "name": "Lumper / Driver Assist Costs",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-5",
+            "name": "Missing, Late, Inaccurate Documentation",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Customer Service Failures",
+            "code": "H-6",
+            "name": "Failure to Provide a Lumper Receipt",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Termination-Related Charges",
+            "code": "I-1",
+            "name": "Final Settlement Holdback",
+            "amount": 1000,
+            "frequency": "Once",
+            "applied": true
+      },
+      {
+            "category": "Termination-Related Charges",
+            "code": "I-2",
+            "name": "Equipment Repossession",
+            "amount": 500,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Other Fines",
+            "code": "J-1",
+            "name": "Any other fine, charge, or assessment",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Other Fines",
+            "code": "J-2",
+            "name": "Failure to pull into a weigh station",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Other Fines",
+            "code": "J-3",
+            "name": "Failure to accept tracking from a broker",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Other Fines",
+            "code": "J-4",
+            "name": "3rd-party property damage",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-1",
+            "name": "Level I: North American Standard Inspection",
+            "amount": 400,
+            "frequency": "Per clean inspection",
+            "applied": true
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-2",
+            "name": "Level II: Walk-Around Driver and Vehicle Inspection",
+            "amount": 330,
+            "frequency": "Per clean inspection",
+            "applied": true
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-3",
+            "name": "Level III: Driver-Only Inspection",
+            "amount": 250,
+            "frequency": "Per clean inspection",
+            "applied": true
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-4",
+            "name": "Level IV: Special Inspection",
+            "amount": 200,
+            "frequency": "Per clean inspection",
+            "applied": true
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-5",
+            "name": "Level V: Vehicle-Only Inspection",
+            "amount": 200,
+            "frequency": "Per clean inspection",
+            "applied": true
+      },
+      {
+            "category": "Bonus Schedule",
+            "code": "B-6",
+            "name": "No roadside inspection violations in a rolling 3-month period",
+            "amount": 300,
+            "frequency": "Per qualifying period",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-1",
+            "name": "Reckless driving, texting while driving...",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-2",
+            "name": "Speeding 11-14 mph over the posted limit",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-3",
+            "name": "Failing to use a seat belt",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-4",
+            "name": "Following too close",
+            "amount": 200,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-5",
+            "name": "Failure to obey or yield right-of-way",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-6",
+            "name": "Improper lane change",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-7",
+            "name": "Improper turning",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-8",
+            "name": "Railroad-crossing violation",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-9",
+            "name": "Violating lane restrictions / left lane violation",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-10",
+            "name": "Failure to obey traffic control device",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-11",
+            "name": "Driving into oncoming traffic",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-12",
+            "name": "Failure to maintain lane",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-13",
+            "name": "Failure to use hazard warning flashers",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-14",
+            "name": "Failure to dim headlamps",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-15",
+            "name": "Failure to use caution in hazardous conditions",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-16",
+            "name": "Unlawful parking",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Unsafe Driving",
+            "code": "A-17",
+            "name": "Using a hand-held device while operating a CMV",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Drugs & Alcohol",
+            "code": "B-1",
+            "name": "Possession, use, or being under the influence",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Drugs & Alcohol",
+            "code": "B-2",
+            "name": "Violating an out-of-service order related to alcohol use",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Drugs & Alcohol",
+            "code": "B-3",
+            "name": "Failure to report an accident requiring drug testing",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-1",
+            "name": "Driving after being placed out of service",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-2",
+            "name": "Driving while ill or fatigued",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-3",
+            "name": "False logs or HOS violation",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-4",
+            "name": "Log not current / failure to retain prior 7 days' logs",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-5",
+            "name": "Log violation (general / form and manner)",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-6",
+            "name": "Late logs",
+            "amount": 25,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-7",
+            "name": "Driving while logged out of ELD",
+            "amount": 250,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Fines: Hours of Service",
+            "code": "C-8",
+            "name": "Disconnected / tampered ELD",
+            "amount": 500,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Fines: Driver Fitness",
+            "code": "D-1",
+            "name": "Driving CMV without a CDL or suspended CDL",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Driver Fitness",
+            "code": "D-2",
+            "name": "Failure to report or notify Company of a suspended license",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Driver Fitness",
+            "code": "D-3",
+            "name": "Learner's-permit violations",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Driver Fitness",
+            "code": "D-4",
+            "name": "No English-proficient driver",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": false
+      },
+      {
+            "category": "Fines: Driver Fitness",
+            "code": "D-5",
+            "name": "No medical card in driver's possession",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-1",
+            "name": "Late bill of lading",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-2",
+            "name": "Lost bill of lading",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-3",
+            "name": "Failure to follow delivery instructions",
+            "amount": 250,
+            "frequency": "Per Load",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-4",
+            "name": "Failure to scale a load and notify Company",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-5",
+            "name": "Failure to turn in roadside inspection or ticket on time",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-6",
+            "name": "Failure to turn in trailer inspection reports",
+            "amount": 50,
+            "frequency": "Per Week",
+            "applied": false
+      },
+      {
+            "category": "Fines: Documentation & Cargo",
+            "code": "E-7",
+            "name": "Lost tractor documents folder",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Riders & Authority",
+            "code": "F-1",
+            "name": "Unauthorized riders or passengers",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Riders & Authority",
+            "code": "F-2",
+            "name": "Pulling unreported or unauthorized broker loads",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Riders & Authority",
+            "code": "F-3",
+            "name": "Singles falsifying loads as teams",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Riders & Authority",
+            "code": "F-4",
+            "name": "Allowing an unqualified or unauthorized person to drive",
+            "amount": 1000,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Reporting",
+            "code": "G-1",
+            "name": "Missing required check calls",
+            "amount": 50,
+            "frequency": "Per Missed Call",
+            "applied": true
+      },
+      {
+            "category": "Fines: Reporting",
+            "code": "G-2",
+            "name": "Failure to notify Safety of driver/truck status changes",
+            "amount": 150,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Fines: Reporting",
+            "code": "G-3",
+            "name": "Failure to notify Maintenance when dropping/switching",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Equipment",
+            "code": "H-1",
+            "name": "Switching license plates or parts between trailers",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Equipment",
+            "code": "H-2",
+            "name": "Breaking pin locks off trailers",
+            "amount": 250,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Equipment",
+            "code": "H-3",
+            "name": "Changing parameters on the truck ECM",
+            "amount": 500,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Equipment",
+            "code": "H-4",
+            "name": "Failure to return truck to home terminal same day",
+            "amount": 750,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Equipment",
+            "code": "H-5",
+            "name": "Using Company-furnished truck for personal needs",
+            "amount": 250,
+            "frequency": "Per Day",
+            "applied": true
+      },
+      {
+            "category": "Fines: Conduct",
+            "code": "I-1",
+            "name": "Smoking on customer or Company property",
+            "amount": 150,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Conduct",
+            "code": "I-2",
+            "name": "Using customer or Company telephones without permission",
+            "amount": 50,
+            "frequency": "Per Occurrence",
+            "applied": true
+      },
+      {
+            "category": "Fines: Conduct",
+            "code": "I-3",
+            "name": "Littering on customer or Company property",
+            "amount": 100,
+            "frequency": "Per Occurrence",
+            "applied": true
+      }
+]
   },
   'hanse': {
     company: { legalName: "HANSE LLC", displayName: "Hanse", subtitle: "Recruitment Dashboard", dot: "0000000", mc: "MC-000000", usdotStatus: "Active", drivers: 0, powerUnits: 0 },
-    insurance: { active: null, history: [] }, departments: [], yards: [], schedule: [], brokers: []
+    insurance: { active: null, history: [] }, departments: [], yards: [], schedule: [], brokers: [], charges: []
   }
   // Others fall back to generic
 };
@@ -389,7 +1352,18 @@ function renderCompanyProfile() {
         </div>
       </div>
       <div class="cp-actions">
-        <button class="cp-btn">Edit Company</button>
+        ${window.isCompanyEditMode ? `
+          <div style="display:flex; gap:8px;">
+            <button class="cp-btn primary" onclick="syncWithFmcsaInline(this)" style="display:flex; align-items:center; gap:6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.25 5.25"/></svg>
+              Sync FMCSA
+            </button>
+            <button class="cp-btn" onclick="toggleCompanyEditMode()">Cancel</button>
+            <button class="cp-btn primary" onclick="saveCompanyInline()">Save Changes</button>
+          </div>
+        ` : `
+          <button class="cp-btn" onclick="toggleCompanyEditMode()">Edit Company</button>
+        `}
       </div>
     </div>
     
@@ -401,12 +1375,30 @@ function renderCompanyProfile() {
       </div>
       <div class="cp-section-content">
         <div class="cp-grid-3">
-          <div class="cp-field"><label>Legal Name</label><div class="val">${comp.legalName}</div></div>
-          <div class="cp-field"><label>DBA Name</label><div class="val">${comp.dbaName || 'N/A'}</div></div>
-          <div class="cp-field"><label>Physical Address</label><div class="val">${comp.physicalAddress || 'N/A'}</div></div>
-          <div class="cp-field"><label>Mailing Address</label><div class="val">${comp.mailingAddress || 'N/A'}</div></div>
-          <div class="cp-field"><label>Phone</label><div class="val">${comp.phone || 'N/A'}</div></div>
-          <div class="cp-field"><label>Email</label><div class="val">${comp.email || 'N/A'}</div></div>
+          <div class="cp-field"><label>Legal Name</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompLegalName" value="${comp.legalName || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.legalName}</div>`}
+          </div>
+          <div class="cp-field"><label>DBA Name</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompDbaName" value="${comp.dbaName || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.dbaName || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>DOT #</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompDot" value="${comp.dot || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.dot || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>MC #</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompMc" value="${comp.mc || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.mc || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>Phone</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompPhone" value="${comp.phone || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.phone || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>Email</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompEmail" value="${comp.email || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.email || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>Physical Address</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompPhysical" value="${comp.physicalAddress || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.physicalAddress || 'N/A'}</div>`}
+          </div>
+          <div class="cp-field"><label>Mailing Address</label>
+            ${window.isCompanyEditMode ? `<input type="text" id="inlineCompMailing" value="${comp.mailingAddress || ''}" style="width:100%; padding:6px; border:1px solid var(--primary); border-radius:4px; margin-top:4px;">` : `<div class="val">${comp.mailingAddress || 'N/A'}</div>`}
+          </div>
           <div class="cp-field"><label>MCS-150 Date</label><div class="val">${comp.mcs150Date || 'N/A'}</div></div>
           <div class="cp-field"><label>MCS-150 Mileage</label><div class="val">${comp.mcs150Mileage || 'N/A'}</div></div>
           <div class="cp-field"><label>Operation Class</label><div class="val">${comp.operationClass || 'N/A'}</div></div>
@@ -424,7 +1416,13 @@ function renderCompanyProfile() {
     <div class="cp-section">
       <div class="cp-section-header" onclick="toggleCpSection(this)">
         <div class="cp-section-title">Active Insurance <span class="cp-badge green">Active</span></div>
-        <div class="cp-section-summary">${ins.active.company} - ${ins.active.policy}</div>
+        <div class="cp-section-summary" style="display:flex; align-items:center; gap:16px;">
+          <span>${ins.active.company} - ${ins.active.policy}</span>
+          <div style="display:flex; gap:8px;">
+            <button class="cp-btn" onclick="event.stopPropagation(); alert('Upload Policy placeholder')" style="padding:4px 8px; font-size:12px;">Upload Policy</button>
+            <button class="cp-btn primary" onclick="event.stopPropagation(); alert('View Policy placeholder')" style="padding:4px 8px; font-size:12px;">View Policy</button>
+          </div>
+        </div>
       </div>
       <div class="cp-section-content">
         <div class="cp-grid-3">
@@ -436,7 +1434,10 @@ function renderCompanyProfile() {
         </div>
         
         <div style="background: var(--background); padding: 16px; border-radius: 8px; margin-top: 20px; border: 1px solid var(--border);">
-          <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Agent Information</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Agent Information</div>
+            <button class="cp-btn" onclick="openEditAgentModal()" style="padding:4px 10px; font-size:11px;">Edit Agent</button>
+          </div>
           <div class="cp-grid-3">
             <div class="cp-field" style="margin-bottom:0;"><label>Name</label><div class="val">${ins.active.agentName || 'N/A'}</div></div>
             <div class="cp-field" style="margin-bottom:0;"><label>Phone</label><div class="val">${ins.active.agentPhone || 'N/A'}</div></div>
@@ -476,12 +1477,15 @@ function renderCompanyProfile() {
   
   // Departments & Employees
   let totalMembers = data.departments.reduce((acc, d) => acc + d.members.length, 0);
+  
+  window.cpDeptFilters = window.cpDeptFilters || new Set();
+  
   html += `
       <div class="cp-section">
       <div class="cp-section-header" onclick="toggleCpSection(this)">
         <div class="cp-section-title">Departments & Team Members</div>
         <div class="cp-section-summary" style="display:flex; align-items:center; gap:16px;">
-          <span>${data.departments.length} Departments · ${totalMembers} Employees</span>
+          <span>${data.departments.length} Departments — ${totalMembers} Employees</span>
           <button class="cp-btn primary" onclick="event.stopPropagation(); openAddEmployeeModal()" style="padding:4px 10px; font-size:12px; display:flex; align-items:center; gap:4px;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
             Add Employee
@@ -489,15 +1493,31 @@ function renderCompanyProfile() {
         </div>
       </div>
       <div class="cp-section-content">
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; align-items:center;">
+          <button class="cp-btn" onclick="openAddCustomDeptModal()" style="padding:6px 12px; border-radius:16px; font-size:12px; border:1px dashed var(--border); background:transparent;">+ Add Custom Dept</button>
+        </div>
         <input type="text" placeholder="Search team members by name, nickname, or role..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:16px;" onkeyup="searchCpEmployees(this.value)">
   `;
   
   data.departments.forEach(dept => {
+    const isSelected = window.cpDeptFilters.size === 0 || window.cpDeptFilters.has(dept.name);
+    
+    // If not in edit mode, completely hide unselected departments
+    if (!window.isCompanyEditMode && !isSelected) return;
+    
+    const isEditMode = window.isCompanyEditMode;
+    const isBlue = isEditMode && isSelected;
+    
     html += `
-      <div class="cp-dept-card">
-        <div class="cp-dept-header" onclick="toggleCpSection(this)">
-          <div>
-            ${dept.name} <span style="color:var(--text-muted); font-size:12px; margin-left:8px;">${dept.members.length} members</span>
+      <div class="cp-dept-card" data-dept="${dept.name}" style="${isBlue ? 'border-color: var(--blue);' : ''}">
+        <div class="cp-dept-header" onclick="toggleCpSection(this)" style="${isBlue ? 'background: var(--blue); color: white;' : ''}">
+          <div style="display:flex; align-items:center; gap:12px;">
+            ${isEditMode ? `
+            <div class="dept-checkbox" onclick="event.stopPropagation(); toggleDeptFilter('${dept.name}')" style="width:18px; height:18px; border-radius:50%; border:2px solid ${isBlue ? 'white' : 'var(--border)'}; background:${isBlue ? 'white' : 'transparent'}; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+              ${isSelected ? `<div style="width:8px; height:8px; border-radius:50%; background:var(--blue);"></div>` : ''}
+            </div>
+            ` : ''}
+            ${dept.name} <span class="dept-members-count" style="color:${isBlue ? 'rgba(255,255,255,0.8)' : 'var(--text-muted)'}; font-size:12px; margin-left:8px;">${dept.members.length} members</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
             <button class="cp-btn primary" onclick="event.stopPropagation(); openAddEmployeeModal('${dept.name}')" style="padding:4px 10px; font-size:12px; display:flex; align-items:center; gap:4px;">
@@ -543,8 +1563,9 @@ function renderCompanyProfile() {
                 <h4 style="margin:0; font-size:14px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                   ${m.name} ${m.nick ? `<span style="color:var(--text-muted); font-weight:normal;">/ ${m.nick}</span>` : ''}
                 </h4>
-                <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                <div style="font-size:12px; color:var(--text-muted); margin-top:2px; display:flex; align-items:center; gap:6px;">
                   <span>${m.role}</span>
+                  ${m.outsource ? '<span class="cp-badge yellow" style="font-size:10px; padding:2px 6px;">Outsource</span>' : ''}
                 </div>
               </div>
             </div>
@@ -578,6 +1599,97 @@ function renderCompanyProfile() {
   });
   
   html += `</div></div>`;
+    
+    // --- Company Charges ---
+    if (data.charges && data.charges.length > 0) {
+      const activeCharges = window.isCompanyEditMode ? data.charges : data.charges.filter(c => c.applied);
+      
+      if (activeCharges.length > 0 || window.isCompanyEditMode) {
+        html += `
+        <div class="cp-section">
+          <div class="cp-section-header" onclick="toggleCpSection(this)">
+            <div class="cp-section-title">Company Charges & Deductions</div>
+            <div class="cp-section-summary" style="display:flex; align-items:center; gap:16px;">
+              <span>${activeCharges.length} Charges</span>
+              ${window.isCompanyEditMode ? `
+                <button class="cp-btn" onclick="event.stopPropagation(); simulateAIParsing(this)" style="padding:4px 10px; font-size:12px; display:flex; align-items:center; gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"></path></svg>
+                  Upload Document
+                </button>
+                <button class="cp-btn primary" onclick="event.stopPropagation(); openAddChargeModal()" style="padding:4px 10px; font-size:12px; display:flex; align-items:center; gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                  Add Custom Charge
+                </button>
+              ` : ''}
+            </div>
+          </div>
+          <div class="cp-section-content" style="padding:0;">
+            <div style="padding:16px; border-bottom:1px solid var(--border);">
+              <input type="text" placeholder="Search charges by code or description..." onkeyup="searchCpCharges(this.value)" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:13px;">
+            </div>
+            <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border); background:var(--surface2);">
+                  <th style="padding:12px 16px; font-weight:600; width:15%;">Code</th>
+                  <th style="padding:12px 16px; font-weight:600; width:50%;">Description</th>
+                  <th style="padding:12px 16px; font-weight:600; width:15%;">Amount</th>
+                  <th style="padding:12px 16px; font-weight:600; width:20%;">Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        
+        const groupedCharges = {};
+        activeCharges.forEach(c => {
+          if (!groupedCharges[c.category]) groupedCharges[c.category] = [];
+          groupedCharges[c.category].push(c);
+        });
+        
+        Object.keys(groupedCharges).forEach(cat => {
+          html += `
+            <tr style="background:var(--surface3); border-bottom:1px solid var(--border);">
+              <td colspan="4" style="padding:8px 16px; font-weight:700; font-size:12px; color:var(--text-muted); text-transform:uppercase;">${cat}</td>
+            </tr>
+          `;
+          groupedCharges[cat].forEach(c => {
+            const isBlue = window.isCompanyEditMode && c.applied;
+            html += `
+              <tr class="charge-row" data-code="${c.code}" style="border-bottom:1px solid var(--border); background:${isBlue ? 'rgba(47, 94, 169, 0.05)' : 'transparent'}; transition: background 0.2s;">
+                <td style="padding:12px 16px; font-family:monospace; color:var(--text-muted);">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    ${window.isCompanyEditMode ? `
+                      <div class="charge-checkbox" onclick="toggleChargeApplied('${c.code}')" style="width:18px; height:18px; border-radius:4px; border:2px solid ${isBlue ? 'var(--blue)' : 'var(--border)'}; background:${isBlue ? 'var(--blue)' : 'transparent'}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.2s;">
+                        ${c.applied ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>` : ''}
+                      </div>
+                    ` : ''}
+                    ${c.code}
+                  </div>
+                </td>
+                <td style="padding:12px 16px;">${c.name}</td>
+                <td style="padding:12px 16px;">
+                  ${window.isCompanyEditMode ? `
+                    <div style="display:flex; align-items:center; gap:4px;">
+                      <span style="color:var(--text-muted);">$</span>
+                      <input type="number" class="charge-amount-input" data-code="${c.code}" value="${c.amount.toFixed(2)}" style="width:70px; padding:4px 8px; border:1px solid var(--border); border-radius:4px; font-size:13px;" onchange="updateChargeAmount('${c.code}', this.value)">
+                    </div>
+                  ` : `
+                    $${c.amount.toFixed(2)}
+                  `}
+                </td>
+                <td style="padding:12px 16px; color:var(--text-muted);">${c.frequency}</td>
+              </tr>
+            `;
+          });
+        });
+        
+        html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+        `;
+      }
+    }
   
   // Drivers & Equipment
   html += `
@@ -991,4 +2103,276 @@ window.handleBanAction = function(selectEl, idx) {
       }
     }
   }
+};
+
+// Edit Company Logic
+window.openEditCompanyModal = function() {
+  const comp = companyProfileData[activeCompanyId].company;
+  document.getElementById('editCompLegalName').value = comp.legalName || '';
+  document.getElementById('editCompDbaName').value = comp.dbaName || '';
+  document.getElementById('editCompDot').value = comp.dot || '';
+  document.getElementById('editCompMc').value = comp.mc || '';
+  document.getElementById('editCompanyModal').style.display = 'flex';
+};
+
+window.closeEditCompanyModal = function() {
+  document.getElementById('editCompanyModal').style.display = 'none';
+};
+
+window.syncWithFmcsa = function() {
+  const btn = event.currentTarget;
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = 'Syncing...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+    alert('Synced successfully with FMCSA!');
+  }, 1000);
+};
+
+window.saveCompanyDetails = function() {
+  const comp = companyProfileData[activeCompanyId].company;
+  comp.legalName = document.getElementById('editCompLegalName').value;
+  comp.dbaName = document.getElementById('editCompDbaName').value;
+  comp.dot = document.getElementById('editCompDot').value;
+  comp.mc = document.getElementById('editCompMc').value;
+  closeEditCompanyModal();
+  renderCompanyProfile();
+};
+
+// Edit Agent Logic
+window.openEditAgentModal = function() {
+  const ins = companyProfileData[activeCompanyId].insurance.active;
+  if(!ins) return;
+  document.getElementById('editAgentName').value = ins.agentName || '';
+  document.getElementById('editAgentPhone').value = ins.agentPhone || '';
+  document.getElementById('editAgentEmail').value = ins.agentEmail || '';
+  document.getElementById('editAgentModal').style.display = 'flex';
+};
+
+window.closeEditAgentModal = function() {
+  document.getElementById('editAgentModal').style.display = 'none';
+};
+
+window.saveAgentDetails = function() {
+  const ins = companyProfileData[activeCompanyId].insurance.active;
+  if(ins) {
+    ins.agentName = document.getElementById('editAgentName').value;
+    ins.agentPhone = document.getElementById('editAgentPhone').value;
+    ins.agentEmail = document.getElementById('editAgentEmail').value;
+  }
+  closeEditAgentModal();
+  renderCompanyProfile();
+};
+
+// Custom Department Logic
+window.openAddCustomDeptModal = function() {
+  document.getElementById('customDeptName').value = '';
+  document.getElementById('addCustomDeptModal').style.display = 'flex';
+};
+
+window.closeAddCustomDeptModal = function() {
+  document.getElementById('addCustomDeptModal').style.display = 'none';
+};
+
+window.saveCustomDept = function() {
+  const name = document.getElementById('customDeptName').value.trim();
+  if(!name) {
+    alert('Department name is required');
+    return;
+  }
+  companyProfileData[activeCompanyId].departments.push({
+    name: name,
+    members: []
+  });
+  closeAddCustomDeptModal();
+  renderCompanyProfile();
+};
+
+// Department Filter Logic
+window.toggleAllDeptFilters = function(isChecked) {
+  if (isChecked) {
+    window.cpDeptFilters.clear();
+  } else {
+    // If unchecking "All", we check all individual departments so user can then uncheck specific ones
+    const cData = companyProfileData[activeCompanyId];
+    if (cData && cData.departments) {
+      cData.departments.forEach(d => window.cpDeptFilters.add(d.name));
+    }
+  }
+  renderCompanyProfile();
+};
+
+window.toggleDeptFilter = function(deptName) {
+  // If "All" was previously selected (set is empty), we populate it first
+  if (window.cpDeptFilters.size === 0) {
+    const cData = companyProfileData[activeCompanyId];
+    if (cData && cData.departments) {
+      cData.departments.forEach(d => {
+        if (d.name !== deptName) {
+          window.cpDeptFilters.add(d.name);
+        }
+      });
+    }
+  } else {
+    // Toggle the pill
+    if (window.cpDeptFilters.has(deptName)) {
+      window.cpDeptFilters.delete(deptName);
+    } else {
+      window.cpDeptFilters.add(deptName);
+    }
+    
+    // If all are now selected, clear the set so "All" applies
+    const cData = companyProfileData[activeCompanyId];
+    if (cData && cData.departments && window.cpDeptFilters.size === cData.departments.length) {
+      window.cpDeptFilters.clear();
+    }
+  }
+  
+  // Update DOM directly to preserve expanded states
+  document.querySelectorAll('.cp-dept-card').forEach(card => {
+    const dName = card.getAttribute('data-dept');
+    if (!dName) return;
+    const isSelected = window.cpDeptFilters.size === 0 || window.cpDeptFilters.has(dName);
+    
+    const isBlue = window.isCompanyEditMode && isSelected;
+    
+    card.style.borderColor = isBlue ? 'var(--blue)' : '';
+    
+    const header = card.querySelector('.cp-dept-header');
+    if (header) {
+      header.style.background = isBlue ? 'var(--blue)' : '';
+      header.style.color = isBlue ? 'white' : '';
+      
+      const cb = header.querySelector('.dept-checkbox');
+      if (cb) {
+        cb.style.border = '2px solid ' + (isBlue ? 'white' : 'var(--border)');
+        cb.style.background = isBlue ? 'white' : 'transparent';
+        cb.innerHTML = isSelected ? '<div style="width:8px; height:8px; border-radius:50%; background:var(--blue);"></div>' : '';
+      }
+      
+      const mc = header.querySelector('.dept-members-count');
+      if (mc) {
+        mc.style.color = isBlue ? 'rgba(255,255,255,0.8)' : 'var(--text-muted)';
+      }
+    }
+  });
+};
+
+window.toggleCompanyEditMode = function() {
+  window.isCompanyEditMode = !window.isCompanyEditMode;
+  renderCompanyProfile();
+};
+
+window.syncWithFmcsaInline = function(btn) {
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = 'Syncing...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+    alert('Synced successfully with FMCSA!');
+  }, 1000);
+};
+
+window.saveCompanyInline = function() {
+  const comp = companyProfileData[activeCompanyId].company;
+  comp.legalName = document.getElementById('inlineCompLegalName').value;
+  comp.dbaName = document.getElementById('inlineCompDbaName').value;
+  comp.dot = document.getElementById('inlineCompDot').value;
+  comp.mc = document.getElementById('inlineCompMc').value;
+  comp.phone = document.getElementById('inlineCompPhone').value;
+  comp.email = document.getElementById('inlineCompEmail').value;
+  comp.physicalAddress = document.getElementById('inlineCompPhysical').value;
+  comp.mailingAddress = document.getElementById('inlineCompMailing').value;
+  
+  window.isCompanyEditMode = false;
+  renderCompanyProfile();
+};
+
+window.simulateAIParsing = function(btn) {
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = 'AI Parsing Document...';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+    alert('AI has successfully parsed the document and populated the charges!');
+  }, 2000);
+};
+
+window.toggleChargeApplied = function(code) {
+  const data = companyProfileData[activeCompanyId];
+  if (!data.charges) return;
+  const charge = data.charges.find(c => c.code === code);
+  if (charge) {
+    charge.applied = !charge.applied;
+    // We can do a direct DOM update instead of full render to prevent jumping, but since the list of charges is small, a full render is acceptable. However, for a better UX let's try direct DOM if possible.
+    renderCompanyProfile();
+  }
+};
+
+window.updateChargeAmount = function(code, val) {
+  const data = companyProfileData[activeCompanyId];
+  if (!data.charges) return;
+  const charge = data.charges.find(c => c.code === code);
+  if (charge) {
+    charge.amount = parseFloat(val) || 0;
+  }
+};
+
+window.searchCpCharges = function(query) {
+  const filter = query.toLowerCase();
+  const rows = document.querySelectorAll('.charge-row');
+  
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (text.includes(filter)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+};
+
+window.openAddChargeModal = function() {
+  document.getElementById('newChargeCode').value = '';
+  document.getElementById('newChargeDesc').value = '';
+  document.getElementById('newChargeAmt').value = '';
+  document.getElementById('newChargeFreq').value = '';
+  document.getElementById('addCustomChargeModal').style.display = 'flex';
+};
+
+window.closeAddChargeModal = function() {
+  document.getElementById('addCustomChargeModal').style.display = 'none';
+};
+
+window.saveNewCustomCharge = function() {
+  const code = document.getElementById('newChargeCode').value.trim();
+  const name = document.getElementById('newChargeDesc').value.trim();
+  const amt = document.getElementById('newChargeAmt').value.trim();
+  const freq = document.getElementById('newChargeFreq').value.trim();
+  
+  if (!code || !name) {
+    alert("Code and Description are required.");
+    return;
+  }
+  
+  const data = companyProfileData[activeCompanyId];
+  if (!data.charges) data.charges = [];
+  data.charges.push({
+    category: "Custom Charges",
+    code: code,
+    name: name,
+    amount: parseFloat(amt) || 0,
+    frequency: freq || 'Per Occurrence',
+    applied: true
+  });
+  
+  closeAddChargeModal();
+  renderCompanyProfile();
 };
