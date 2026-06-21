@@ -1630,8 +1630,7 @@ function renderCompanyProfile() {
             <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;">
               <thead>
                 <tr style="border-bottom:1px solid var(--border); background:var(--surface2);">
-                  <th style="padding:12px 16px; font-weight:600; width:15%;">Code</th>
-                  <th style="padding:12px 16px; font-weight:600; width:50%;">Description</th>
+                  <th style="padding:12px 16px; font-weight:600; width:65%;">Description</th>
                   <th style="padding:12px 16px; font-weight:600; width:15%;">Amount</th>
                   <th style="padding:12px 16px; font-weight:600; width:20%;">Frequency</th>
                 </tr>
@@ -1648,24 +1647,23 @@ function renderCompanyProfile() {
         Object.keys(groupedCharges).forEach(cat => {
           html += `
             <tr style="background:var(--surface3); border-bottom:1px solid var(--border);">
-              <td colspan="4" style="padding:8px 16px; font-weight:700; font-size:12px; color:var(--text-muted); text-transform:uppercase;">${cat}</td>
+              <td colspan="3" style="padding:8px 16px; font-weight:700; font-size:12px; color:var(--text-muted); text-transform:uppercase;">${cat}</td>
             </tr>
           `;
           groupedCharges[cat].forEach(c => {
             const isBlue = window.isCompanyEditMode && c.applied;
             html += `
               <tr class="charge-row" data-code="${c.code}" style="border-bottom:1px solid var(--border); background:${isBlue ? 'rgba(47, 94, 169, 0.05)' : 'transparent'}; transition: background 0.2s;">
-                <td style="padding:12px 16px; font-family:monospace; color:var(--text-muted);">
+                <td style="padding:12px 16px;">
                   <div style="display:flex; align-items:center; gap:12px;">
                     ${window.isCompanyEditMode ? `
-                      <div class="charge-checkbox" onclick="toggleChargeApplied('${c.code}')" style="width:18px; height:18px; border-radius:4px; border:2px solid ${isBlue ? 'var(--blue)' : 'var(--border)'}; background:${isBlue ? 'var(--blue)' : 'transparent'}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.2s;">
+                      <div class="charge-checkbox" onclick="toggleChargeApplied('${c.code}')" style="width:18px; height:18px; border-radius:4px; border:2px solid ${isBlue ? 'var(--blue)' : 'var(--border)'}; background:${isBlue ? 'var(--blue)' : 'transparent'}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: all 0.2s; flex-shrink:0;">
                         ${c.applied ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg>` : ''}
                       </div>
                     ` : ''}
-                    ${c.code}
+                    <span>${c.name}</span>
                   </div>
                 </td>
-                <td style="padding:12px 16px;">${c.name}</td>
                 <td style="padding:12px 16px;">
                   ${window.isCompanyEditMode ? `
                     <div style="display:flex; align-items:center; gap:4px;">
@@ -1730,40 +1728,11 @@ function renderCompanyProfile() {
     </div>
   `;
 
-  const brokers = data.brokers || [];
-  html += `
-    <div class="cp-section">
-      <div class="cp-section-header" onclick="toggleCpSection(this)">
-        <div class="cp-section-title">Banned Brokers</div>
-        <div class="cp-section-summary" style="display:flex; align-items:center; gap:16px;">
-          <span>${brokers.length} Bans</span>
-          <button class="cp-btn primary" onclick="event.stopPropagation(); openAddBanModal()" style="padding:4px 10px; font-size:12px; display:flex; align-items:center; gap:4px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
-            Add Ban
-          </button>
-        </div>
-      </div>
-      <div class="cp-section-content">
-        <input type="text" placeholder="Search bans by name, reason, or MC..." style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;" onkeyup="searchCpBans(this.value)">
-        <div style="max-height:300px; overflow-y:auto;">
-          <table class="cp-table">
-            <thead>
-              <tr><th>Broker Name</th><th>MC #</th><th>Severity</th><th>Reason</th><th>Action</th></tr>
-            </thead>
-            <tbody id="cp-bans-tbody">
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  `;
-
   container.innerHTML = html;
   
   // Render tables after injecting HTML
   searchCpUnits('');
   searchCpDrivers('');
-  searchCpBans('');
 }
 
 // Additional Modal APIs
