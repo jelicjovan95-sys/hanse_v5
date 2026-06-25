@@ -2,6 +2,26 @@
    MASTER SAFETY DASHBOARD — master-safety.js
    ===================================================== */
 
+/**
+ * Opens the lead/recruiting card for a driver by their full name.
+ * Works everywhere in the safety dashboard where a driver name is displayed.
+ */
+window.msOpenDriverByName = function(driverName) {
+  if (!driverName) return;
+  // leads array lives in app.js (global 'leads')
+  var allLeads = (typeof leads !== 'undefined' ? leads : []);
+  var name = driverName.toLowerCase().trim();
+  var found = allLeads.find(function(l) {
+    var full = ((l.firstName || '') + ' ' + (l.lastName || '')).toLowerCase().trim();
+    var first = (l.firstName || '').toLowerCase().trim();
+    return full === name || first === name;
+  });
+  if (found && typeof openRecruitingModal === 'function') {
+    openRecruitingModal(found, true);
+  } else {
+    console.warn('msOpenDriverByName: no lead found for "' + driverName + '"');
+  }
+};
 
 // --- NEW MOCK DATA (Claims, DOT, Emp Verify) ---
 let msActiveClaimWorkspaceId = null; // State for tracking the opened workspace
@@ -264,12 +284,12 @@ window.msToggleArchiveClaim = function(id) {
   }
 };
 let msMockDOT = [
-  { id: 0, date: '2026-03-10', report: 'PA-H512501333', driver: 'Carlos Medina', oos: 0, unsafe: 0, maint: 2, hos: 1, clean: 4, status: 'Violation', type: 'Charge', manualAmount: 1900, actualAmount: 500, notes: 'missing receipts', vin: '3AKJGLD55GSGU6294', plate: 'R577641', returned: true, challenged: 'Yes', ticket: false, hm: false },
-  { id: 1, date: '2026-05-01', report: 'OH-G901239123', driver: 'Marcus Johnson', oos: 1, unsafe: 1, maint: 0, hos: 0, clean: 0, status: 'OOS', type: 'Bonus', manualAmount: 300, actualAmount: 300, notes: 'all good', vin: '1F651L92P30K29182', plate: 'T81293', returned: false, challenged: 'No', ticket: true, hm: true },
-  { id: 2, date: '2026-05-15', report: 'TX-B341235122', driver: 'David Smith', oos: 0, unsafe: 0, maint: 0, hos: 0, clean: 1, status: 'Clean', type: 'Charge', manualAmount: 0, actualAmount: 0, notes: 'Level 1 pass', vin: '4VZAF2L3489P2', plate: 'K23441', returned: false, challenged: 'No', ticket: false, hm: false },
-  { id: 3, date: '2026-05-20', report: 'NY-A124512411', driver: 'Sarah Connor', oos: 2, unsafe: 0, maint: 3, hos: 1, clean: 0, status: 'OOS', type: 'Charge', manualAmount: 2400, actualAmount: 2400, notes: 'Brakes out of adjustment', vin: '5TJF82LKA1092P', plate: 'P98213', returned: true, challenged: 'Yes', ticket: true, hm: false },
-  { id: 4, date: '2026-05-28', report: 'CA-D991204812', driver: 'James Logan', oos: 0, unsafe: 2, maint: 0, hos: 0, clean: 0, status: 'Violation', type: 'Bonus', manualAmount: 150, actualAmount: 150, notes: 'Speeding 6-10 over', vin: '1GCHK2L39P8123', plate: 'M12944', returned: false, challenged: 'No', ticket: true, hm: false },
-  { id: 5, date: '2026-06-02', report: 'IL-C512351244', driver: 'Michael Phelps', oos: 0, unsafe: 0, maint: 0, hos: 0, clean: 1, status: 'Clean', type: 'Bonus', manualAmount: 200, actualAmount: 200, notes: 'Level 2 Clean Inspection', vin: '1XYZ1234567890', plate: 'IL-12345', returned: false, challenged: 'No', ticket: false, hm: false }
+  { id: 0, date: '2026-03-10', report: 'PA-H512501333', driver: 'Carlos Medina', level: 2, status: 'Violation', type: 'Charge', manualAmount: 0, actualAmount: 0, notes: 'missing receipts', vin: '3AKJGLD55GSGU6294', plate: 'R577641', returned: true, challenged: 'Yes', ticket: false, hm: false, violations: [ { id: '0-0', group: 'Vehicle Maint', desc: 'Brakes out of adjustment', code: '393.45', severity: 4, oos: false, manualAmount: 150, actualAmount: 150, challenged: 'No', ticket: false, hm: false }, { id: '0-1', group: 'Vehicle Maint', desc: 'Inoperable headlamp', code: '393.9', severity: 6, oos: false, manualAmount: 50, actualAmount: 50, challenged: 'Yes', ticket: false, hm: false }, { id: '0-2', group: 'HOS Compliance', desc: 'Logbook Not Current', code: '395.8', severity: 5, oos: false, manualAmount: 300, actualAmount: 300, challenged: 'No', ticket: true, hm: false } ] },
+  { id: 1, date: '2026-05-01', report: 'OH-G901239123', driver: 'Marcus Johnson', level: 1, status: 'Violation', type: 'Charge', manualAmount: 0, actualAmount: 0, notes: 'all good', vin: '1F651L92P30K29182', plate: 'T81293', returned: false, challenged: 'No', ticket: true, hm: true, violations: [ { id: '1-0', group: 'Unsafe Driving', desc: 'Speeding 15+ over', code: '392.2S', severity: 10, oos: false, manualAmount: 500, actualAmount: 500, challenged: 'No', ticket: true, hm: true }, { id: '1-1', group: 'Driver Fitness', desc: 'Medical Certificate Expired', code: '391.45', severity: 8, oos: true, manualAmount: 250, actualAmount: 250, challenged: 'No', ticket: true, hm: false } ] },
+  { id: 2, date: '2026-05-15', report: 'TX-B341235122', driver: 'David Smith', level: 1, status: 'Clean', type: 'Bonus', manualAmount: 300, actualAmount: 300, notes: 'Level 1 pass', vin: '4VZAF2L3489P2', plate: 'K23441', returned: false, challenged: 'No', ticket: false, hm: false, violations: [] },
+  { id: 3, date: '2026-05-20', report: 'NY-A124512411', driver: 'Sarah Connor', level: 3, status: 'Violation', type: 'Charge', manualAmount: 0, actualAmount: 0, notes: 'Brakes out of adjustment', vin: '5TJF82LKA1092P', plate: 'P98213', returned: true, challenged: 'Yes', ticket: true, hm: false, violations: [ { id: '3-0', group: 'Vehicle Maint', desc: 'Brakes out of adjustment', code: '393.45', severity: 4, oos: true, manualAmount: 1500, actualAmount: 1500, challenged: 'No', ticket: true, hm: false }, { id: '3-1', group: 'Vehicle Maint', desc: 'Tire tread depth below 2/32', code: '393.75(c)', severity: 8, oos: true, manualAmount: 400, actualAmount: 400, challenged: 'Yes', ticket: true, hm: false }, { id: '3-2', group: 'Vehicle Maint', desc: 'Air leak', code: '393.45(b)(2)', severity: 4, oos: false, manualAmount: 200, actualAmount: 200, challenged: 'No', ticket: false, hm: false }, { id: '3-3', group: 'HOS Compliance', desc: 'False Record of Duty Status', code: '395.8(e)', severity: 7, oos: true, manualAmount: 300, actualAmount: 300, challenged: 'No', ticket: true, hm: false } ] },
+  { id: 4, date: '2026-05-28', report: 'CA-D991204812', driver: 'James Logan', level: 2, status: 'Violation', type: 'Charge', manualAmount: 0, actualAmount: 0, notes: 'Speeding 6-10 over', vin: '1GCHK2L39P8123', plate: 'M12944', returned: false, challenged: 'No', ticket: true, hm: false, violations: [ { id: '4-0', group: 'Unsafe Driving', desc: 'Speeding 6-10 mph over', code: '392.2S', severity: 4, oos: false, manualAmount: 150, actualAmount: 150, challenged: 'No', ticket: true, hm: false }, { id: '4-1', group: 'Unsafe Driving', desc: 'Lane Departure', code: '392.2', severity: 5, oos: false, manualAmount: 100, actualAmount: 100, challenged: 'No', ticket: true, hm: false } ] },
+  { id: 5, date: '2026-06-02', report: 'IL-C512351244', driver: 'Michael Phelps', level: 2, status: 'Clean', type: 'Bonus', manualAmount: 200, actualAmount: 200, notes: 'Level 2 Clean Inspection', vin: '1XYZ1234567890', plate: 'IL-12345', returned: false, challenged: 'No', ticket: false, hm: false, violations: [] }
 ];
 
 window.msUpdateDOTField = function(id, field, value) {
@@ -623,9 +643,9 @@ function renderMasterSafety() {
   const compliantDrivers = active.filter(d => d.status === 'compliant');
   const fleetScore = msFleetComplianceScore(masterSafetyData);
 
-  container.innerHTML = `
-    <div class="ms-container">
-      ${msRenderHeader()}
+  let dashboardHtml = '';
+  if (msActiveTab === 'overview') {
+    dashboardHtml = `
       <div id="ms-dashboard-top">
         ${msRenderKPIs({
           total: masterSafetyData.length,
@@ -638,7 +658,27 @@ function renderMasterSafety() {
         ${msRenderAlerts(critical, expiringSoon)}
         ${msRenderCharts(active, compliantDrivers, expiringSoon, critical)}
       </div>
+    `;
+  } else if (msActiveTab === 'dot') {
+    dashboardHtml = `
+      <div id="ms-dashboard-top">
+        ${msRenderDOTDashboard()}
+      </div>
+    `;
+  } else if (msActiveTab === 'claims') {
+    dashboardHtml = `
+      <div id="ms-dashboard-top">
+        <!-- Claims Dashboard Placeholder -->
+        <div style="padding: 20px; background: var(--surface); border-radius: 12px; margin-bottom: 20px;">Claims Statistics will go here</div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = `
+    <div class="ms-container">
+      ${msRenderHeader()}
       ${msRenderSubTabs(expiringSoon, critical)}
+      ${dashboardHtml}
       <div id="ms-drivers-container">
         ${msRenderDriversList()}
       </div>
@@ -649,6 +689,7 @@ function renderMasterSafety() {
   msAttachListeners();
 }
 
+
 // -------------------------------------------------------
 function msRenderHeader() {
   const companies = ['United WS', 'CTC Ground'];
@@ -656,27 +697,6 @@ function msRenderHeader() {
     <div class="ms-header">
       <div class="ms-header-left">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 6px;">
-          <select 
-            onchange="msSetCompany(this.value)"
-            style="
-              padding: 6px 30px 6px 12px;
-              border-radius: 8px;
-              border:1px solid var(--border);
-              font-size: 18px;
-              font-weight: 800;
-              color:var(--text);
-              background:var(--surface) url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230f172a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 10px center;
-              background-size: 10px auto;
-              cursor: pointer;
-              appearance: none;
-              -webkit-appearance: none;
-              box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            "
-          >
-            ${companies.map(c => `
-              <option value="${c}" ${msActiveCompany === c ? 'selected' : ''}>${c}</option>
-            `).join('')}
-          </select>
           <select 
             onchange="msSetYear(this.value)"
             style="
@@ -1010,8 +1030,8 @@ function msRenderClaimsTab() {
                   <span style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Claim #</span>
                   <span style="font-size:14px; font-weight:800; color:var(--text);">${c.claimId}</span>
                </div>
-               <div style="padding:6px 12px; border-radius:20px; font-size:11px; font-weight:800; background:var(--surface3); color:var(--text);">
-                  ${c.status}
+               <div style="padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; background:var(--blue); color:white;">
+                  View
                </div>
             </div>
          </div>
@@ -1067,7 +1087,22 @@ function msRenderClaimHeader(c) {
       </div>
       <div style="display:flex; flex-direction:column; align-items:flex-end; gap:12px;">
          <select onchange="msUpdateClaimField('${c.id}', 'status', this.value)" style="padding:8px 16px; border-radius:8px; border:1px solid var(--border-dark); font-size:13px; font-weight:700; background:var(--surface); outline:none; cursor:pointer;">
-            ${statuses.map(s => `<option value="${s}" ${c.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+            <optgroup label="Open Claim">
+               <option value="Draft" ${c.status === 'Draft' ? 'selected' : ''}>Draft</option>
+               <option value="Evidence Pending" ${c.status === 'Evidence Pending' ? 'selected' : ''}>Evidence Pending</option>
+               <option value="Claim Submitted" ${c.status === 'Claim Submitted' ? 'selected' : ''}>Claim Submitted</option>
+               <option value="Waiting for Police Report" ${c.status === 'Waiting for Police Report' ? 'selected' : ''}>Waiting for Police Report</option>
+               <option value="Under Investigation" ${c.status === 'Under Investigation' ? 'selected' : ''}>Under Investigation</option>
+            </optgroup>
+            <optgroup label="Potential Claim">
+               <option value="Accident Reported" ${c.status === 'Accident Reported' ? 'selected' : ''}>Accident Reported</option>
+            </optgroup>
+            <optgroup label="Closed">
+               <option value="Repair Pending" ${c.status === 'Repair Pending' ? 'selected' : ''}>Repair Pending</option>
+               <option value="Settlement Pending" ${c.status === 'Settlement Pending' ? 'selected' : ''}>Settlement Pending</option>
+               <option value="Closed" ${c.status === 'Closed' ? 'selected' : ''}>Closed</option>
+               <option value="Archived" ${c.status === 'Archived' ? 'selected' : ''}>Archived</option>
+            </optgroup>
          </select>
          <button onclick="msCreateDataQCaseFromRecord('Claim', '${c.claimId}', '${c.driver}')" style="padding: 6px 16px; border-radius: 6px; border: 1px solid var(--border-dark); background:var(--surface2); color:var(--text); font-size: 12px; font-weight: 700; cursor: pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
             ⚡ Create DataQ Case
@@ -1351,159 +1386,218 @@ function msRenderTimeline(c) {
   `;
 }
 
-function msRenderDOTTab() {
-  const companyScoreHtml = `
-    <div style="margin-bottom:24px; background:var(--surface); padding:20px; border-radius:14px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
-      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; padding-bottom:24px; border-bottom:1px solid var(--border);">
-        <div style="text-align:center;">
-          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Unsafe Driving</div>
-          <div style="width:80px; height:80px; margin:0 auto; border-radius:50%; border:6px solid #f59e0b; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--text);">
-            56
-          </div>
+function msRenderDOTDashboard() {
+  return `
+    <style>
+      .dot-db-ring {
+        cursor: pointer;
+        text-align: center;
+        padding: 8px;
+        border-radius: 12px;
+        transition: background 0.15s;
+      }
+      .dot-db-ring:hover { background: #f1f5f9; }
+      .dot-db-circle {
+        width: 80px; height: 80px; margin: 0 auto 8px;
+        border-radius: 50%;
+        border: 6px solid;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; font-weight: 900; color: #1e293b;
+      }
+      .dot-db-label {
+        font-size: 10px; font-weight: 800;
+        color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;
+      }
+    </style>
+
+    <div id="dot-db-front" style="background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding-bottom:20px; border-bottom:1px solid #e2e8f0; margin-bottom:20px;">
+
+        <div class="dot-db-ring" onclick="msDOTShowDetail('Unsafe Driving',56,'#f59e0b')">
+          <div class="dot-db-circle" style="border-color:#f59e0b;">56</div>
+          <div class="dot-db-label">Unsafe Driving</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Crash Indicator</div>
-          <div style="width:80px; height:80px; margin:0 auto; border-radius:50%; border:6px solid #ef4444; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--text);">
-            84
-          </div>
+
+        <div class="dot-db-ring" onclick="msDOTShowDetail('Crash Indicator',84,'#ef4444')">
+          <div class="dot-db-circle" style="border-color:#ef4444;">84</div>
+          <div class="dot-db-label">Crash Indicator</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Vehicle Maint</div>
-          <div style="width:80px; height:80px; margin:0 auto; border-radius:50%; border:6px solid #22c55e; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--text);">
-            0
-          </div>
+
+        <div class="dot-db-ring" onclick="msDOTShowDetail('Vehicle Maint',93,'#ef4444')">
+          <div class="dot-db-circle" style="border-color:#ef4444;">93</div>
+          <div class="dot-db-label">Vehicle Maint</div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">HOS</div>
-          <div style="width:80px; height:80px; margin:0 auto; border-radius:50%; border:6px solid #ef4444; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:var(--text);">
-            79
-          </div>
+
+        <div class="dot-db-ring" onclick="msDOTShowDetail('HOS Compliance',79,'#ef4444')">
+          <div class="dot-db-circle" style="border-color:#ef4444;">79</div>
+          <div class="dot-db-label">HOS</div>
         </div>
+
+        <div class="dot-db-ring" onclick="msDOTShowDetail('Driver Fitness',92,'#6366f1')">
+          <div class="dot-db-circle" style="border-color:#6366f1;">92</div>
+          <div class="dot-db-label">Driver Fitness</div>
+        </div>
+
       </div>
-      
-      <div style="margin-top:24px;">
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
-          
-          <!-- Column 1: Inspection Levels -->
-          <div>
-            <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Inspection Levels</div>
-            
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>Level 1</span><span>45%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:45%; background:#3b82f6; border-radius:3px;"></div>
-              </div>
-            </div>
 
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>Level 2</span><span>30%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:30%; background:#10b981; border-radius:3px;"></div>
-              </div>
-            </div>
-
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>Level 3</span><span>25%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:25%; background:#f59e0b; border-radius:3px;"></div>
-              </div>
-            </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:12px;">Inspection Levels</div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>Level 1</span><span>45%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:45%;background:#3b82f6;border-radius:3px;"></div></div>
           </div>
-
-          <!-- Column 2: Top States -->
-          <div>
-            <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Top 3 States</div>
-            
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>TX (Texas)</span><span>35%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:35%; background:#6366f1; border-radius:3px;"></div>
-              </div>
-            </div>
-
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>OH (Ohio)</span><span>25%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:25%; background:#8b5cf6; border-radius:3px;"></div>
-              </div>
-            </div>
-
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>PA (Pennsylvania)</span><span>20%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:20%; background:#d946ef; border-radius:3px;"></div>
-              </div>
-            </div>
-
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
-                <span>Other</span><span>20%</span>
-              </div>
-              <div style="height:6px; background:var(--surface3); border-radius:3px; overflow:hidden;">
-                <div style="height:100%; width:20%; background:#94a3b8; border-radius:3px;"></div>
-              </div>
-            </div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>Level 2</span><span>30%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:30%;background:#10b981;border-radius:3px;"></div></div>
           </div>
-
-          <!-- Column 3: Top Violations -->
           <div>
-            <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Top Violations Breakdown</div>
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:12px;">
-              <span style="font-weight:600;">Brakes (Out of Adj.)</span>
-              <span style="font-weight:800; color:#ef4444; background:#fef2f2; padding:2px 6px; border-radius:4px;">42</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:12px;">
-              <span style="font-weight:600;">Inoperable Lamps</span>
-              <span style="font-weight:800; color:#ef4444; background:#fef2f2; padding:2px 6px; border-radius:4px;">38</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:12px;">
-              <span style="font-weight:600;">Tire Tread Depth</span>
-              <span style="font-weight:800; color:#f59e0b; background:#fffbeb; padding:2px 6px; border-radius:4px;">15</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:12px;">
-              <span style="font-weight:600;">Logbook Not Current</span>
-              <span style="font-weight:800; color:#f59e0b; background:#fffbeb; padding:2px 6px; border-radius:4px;">12</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:12px;">
-              <span style="font-weight:600;">Speeding (6-10 mph over)</span>
-              <span style="font-weight:800; color:var(--text); background:var(--surface3); padding:2px 6px; border-radius:4px;">8</span>
-            </div>
-
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>Level 3</span><span>25%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:25%;background:#f59e0b;border-radius:3px;"></div></div>
           </div>
+        </div>
+
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:12px;">Top 3 States</div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>TX</span><span>35%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:35%;background:#6366f1;border-radius:3px;"></div></div>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>OH</span><span>25%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:25%;background:#8b5cf6;border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:3px;"><span>PA</span><span>20%</span></div>
+            <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden;"><div style="height:100%;width:20%;background:#d946ef;border-radius:3px;"></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:12px;">Most Frequ. Violations</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;"><span style="font-weight:600;">Brakes</span><span style="font-weight:800;color:#ef4444;background:#fef2f2;padding:2px 6px;border-radius:4px;">42</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;"><span style="font-weight:600;">Lights / Lamps</span><span style="font-weight:800;color:#ef4444;background:#fef2f2;padding:2px 6px;border-radius:4px;">38</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;"><span style="font-weight:600;">Tires / Tread</span><span style="font-weight:800;color:#f59e0b;background:#fffbeb;padding:2px 6px;border-radius:4px;">15</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;"><span style="font-weight:600;">Logbooks</span><span style="font-weight:800;color:#f59e0b;background:#fffbeb;padding:2px 6px;border-radius:4px;">12</span></div>
         </div>
       </div>
     </div>
-  `;
 
-  
+    <div id="dot-db-back" style="display:none; background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:24px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,0.05);">
+      <button onclick="msDOTHideDetail()" style="background:none;border:none;color:#3b82f6;font-weight:700;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;padding:0;margin-bottom:20px;">&#8592; Back to Overview</button>
+      <div id="dot-db-detail-content"></div>
+    </div>
+  `;
+}
+
+window.msDOTShowDetail = function(category, value, color) {
+  var front = document.getElementById('dot-db-front');
+  var back  = document.getElementById('dot-db-back');
+  var detail = document.getElementById('dot-db-detail-content');
+  if (!front || !back || !detail) return;
+
+  var violationsMap = {
+    'Unsafe Driving': [
+      { name: 'Speeding (6-10 mph over)', count: 25 },
+      { name: 'Reckless / Careless Driving', count: 15 },
+      { name: 'Lane Change Violations', count: 10 },
+      { name: 'Following Too Closely', count: 6 }
+    ],
+    'Crash Indicator': [
+      { name: 'Rear-End Collisions', count: 35 },
+      { name: 'Lane Departure Crashes', count: 25 },
+      { name: 'Intersection Incidents', count: 15 },
+      { name: 'Backing Accidents', count: 9 }
+    ],
+    'Vehicle Maint': [
+      { name: 'Brakes Out of Adjustment', count: 42 },
+      { name: 'Inoperable Lamps / Reflectors', count: 28 },
+      { name: 'Tire Defects / Tread Depth', count: 15 },
+      { name: 'Cargo Securement', count: 8 }
+    ],
+    'HOS Compliance': [
+      { name: 'Hours of Service Exceeded', count: 35 },
+      { name: 'Logbook Not Current', count: 25 },
+      { name: 'False Record of Duty Status', count: 12 },
+      { name: 'ELD Malfunction / Missing', count: 7 }
+    ],
+    'Driver Fitness': [
+      { name: 'No / Expired CDL', count: 40 },
+      { name: 'Medical Certificate Expired', count: 30 },
+      { name: 'Wrong CDL Class / Endorsement', count: 15 },
+      { name: 'Driver Disqualified', count: 7 }
+    ],
+    'HOS': [ // fallback for legacy clicks
+      { name: 'Hours of Service Exceeded', count: 35 },
+      { name: 'Logbook Not Current', count: 25 },
+      { name: 'False Record of Duty Status', count: 12 },
+      { name: 'ELD Malfunction / Missing', count: 7 }
+    ]
+  };
+
+  var violations = violationsMap[category] || [
+    { name: 'Violation Type A', count: 12 },
+    { name: 'Violation Type B', count: 8 },
+    { name: 'Violation Type C', count: 4 }
+  ];
+
+  var rowsHtml = violations.map(function(v) {
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:13px;">' +
+      '<span style="font-weight:600;">' + v.name + '</span>' +
+      '<span style="font-weight:800;color:' + color + ';background:#f1f5f9;padding:3px 10px;border-radius:6px;">' + v.count + '</span>' +
+      '</div>';
+  }).join('');
+
+  detail.innerHTML =
+    '<div style="display:grid;grid-template-columns:180px 1fr;gap:32px;align-items:start;">' +
+      '<div style="text-align:center;">' +
+        '<div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:14px;">' + category + '</div>' +
+        '<div style="width:120px;height:120px;margin:0 auto;border-radius:50%;border:8px solid ' + color + ';display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#1e293b;">' + value + '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:14px;">Top Violations — ' + category + '</div>' +
+        rowsHtml +
+        '<div style="margin-top:20px;">' +
+          '<div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;margin-bottom:10px;">Recent Trend (6 months)</div>' +
+          '<div style="height:80px;display:flex;align-items:flex-end;gap:6px;">' +
+            '<div style="flex:1;background:#e2e8f0;height:40%;border-radius:4px 4px 0 0;"></div>' +
+            '<div style="flex:1;background:' + color + ';height:65%;border-radius:4px 4px 0 0;opacity:0.6;"></div>' +
+            '<div style="flex:1;background:' + color + ';height:85%;border-radius:4px 4px 0 0;"></div>' +
+            '<div style="flex:1;background:#e2e8f0;height:30%;border-radius:4px 4px 0 0;"></div>' +
+            '<div style="flex:1;background:' + color + ';height:55%;border-radius:4px 4px 0 0;opacity:0.8;"></div>' +
+            '<div style="flex:1;background:' + color + ';height:75%;border-radius:4px 4px 0 0;"></div>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:#94a3b8;font-weight:700;">' +
+            '<span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  front.style.display = 'none';
+  back.style.display  = 'block';
+};
+
+window.msDOTHideDetail = function() {
+  var front = document.getElementById('dot-db-front');
+  var back  = document.getElementById('dot-db-back');
+  if (!front || !back) return;
+  back.style.display  = 'none';
+  front.style.display = 'block';
+};
+
+/* legacy aliases so old onclick calls still work */
+window.msFlipDOTCard   = window.msDOTShowDetail;
+window.msUnflipDOTCard = window.msDOTHideDetail;
+
+function msRenderDOTTab() {
   const filterHtml = `
   <div style="display: flex; gap: 16px; margin-bottom: 16px; background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
-      <input type="text" id="msDotSearch" placeholder="Search by name..." style="flex: 1; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; outline: none;" onkeyup="msFilterDOT()">
+      <input type="text" id="msDotSearch" placeholder="Search by report or driver..." style="flex: 1; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; outline: none;" onkeyup="msFilterDOT()">
       <select id="msDotStatus" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; outline: none; font-weight: 600;" onchange="msFilterDOT()">
           <option value="All">All Statuses</option>
           <option value="Clean">Clean</option>
           <option value="Violation">Violation</option>
-          <option value="OOS">OOS</option>
-      </select>
-      <select id="msDotType" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; outline: none; font-weight: 600;" onchange="msFilterDOT()">
-          <option value="All">All Violations</option>
-          <option value="HOS">HOS</option>
-          <option value="UNS">Unsafe Driving</option>
-          <option value="MNT">Vehicle Maint</option>
-          <option value="OOS_Type">OOS Violations</option>
       </select>
   </div>
   `;
@@ -1511,127 +1605,84 @@ function msRenderDOTTab() {
   const listHtml = `
   <style>
     .ms-dot-cards-container { display: flex; flex-direction: column; gap: 16px; padding-bottom: 20px; }
-    .dot-row-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .ms-grid-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; cursor: pointer; transition: all 0.2s; }
-    .ms-grid-box:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.05); transform: translateY(-2px); }
-    .ms-grid-box.alert { border-color: #fca5a5; background: #fef2f2; }
-    .ms-grid-box-title { font-size: 10px; font-weight: 800; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; line-height: 1.2; text-align: center; }
-    .ms-grid-box-val { font-size: 18px; font-weight: 800; color: #10b981; }
-    .ms-grid-box.alert .ms-grid-box-val { color: #ef4444; }
+    .dot-row-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; }
+    .dot-header-row { display: grid; grid-template-columns: 2fr 2fr 1fr 3fr 1fr 1fr; gap: 16px; padding: 16px 20px; cursor: pointer; align-items: center; transition: background 0.2s; }
+    .dot-header-row:hover { background: #f8fafc; }
+    .dot-col-title { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; line-height: 1.2; }
+    .dot-col-val { font-size: 14px; font-weight: 700; color: var(--text); }
+    .dot-driver-link { color: var(--blue); text-decoration: none; font-weight: 700; cursor: pointer; }
+    .dot-driver-link:hover { text-decoration: underline; }
+    .dot-status-badge { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
   </style>
   ${filterHtml}
   <div class="ms-dot-cards-container">
     ` + msMockDOT.map(d => {
-        let l1Count = 0;
-        let l2Count = 0;
-        let l3Count = 0;
-        
-        if (d.id === 0 && d.clean === 4) {
-            l1Count += 1;
-            l2Count += 3;
-            l1Count += (d.unsafe + d.oos);
-            l2Count += d.hos;
-            l3Count += d.maint;
-        } else {
-            l2Count += d.clean || 0;
-            l1Count += (d.unsafe + d.oos);
-            l2Count += d.hos;
-            l3Count += d.maint;
-        }
-        
-        const total = l1Count + l2Count + l3Count;
-        let conicBg = '';
-        if (total === 0) {
-            conicBg = 'conic-gradient(#e2e8f0 0% 100%)';
-        } else {
-            const p1 = (l1Count / total) * 100;
-            const p2 = p1 + ((l2Count / total) * 100);
-            conicBg = `conic-gradient(#3b82f6 0% ${p1}%, #ef4444 ${p1}% ${p2}%, #eab308 ${p2}% 100%)`;
-        }
+        let badgeColor = '';
+        if (d.status === 'Clean') badgeColor = 'background:#d1fae5; color:#059669; border:1px solid #a7f3d0;';
+        else if (d.status === 'Violation') badgeColor = 'background:#fef2f2; color:#ef4444; border:1px solid #fca5a5;';
+
+        const totalViolations = d.unsafe + d.maint + d.hos + d.oos;
 
         return `
-    <div class="dot-row-item" data-id="${d.id}" data-name="${d.driver.toLowerCase()}" data-status="${d.status}" data-hos="${d.hos}" data-uns="${d.unsafe}" data-mnt="${d.maint}" data-oos="${d.oos}">
-      <!-- Driver Name & Actions -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <div style="font-size: 18px; font-weight: 800; color: var(--text);">
-              ${d.driver}
+    <div class="dot-row-item" data-id="${d.id}" data-report="${d.report.toLowerCase()}" data-name="${d.driver.toLowerCase()}" data-status="${d.status}">
+      <!-- Header Row (Click to expand) -->
+      <div class="dot-header-row" onclick="msToggleHistory('${d.id}', 'All')">
+          <div>
+              <div class="dot-col-title">Date</div>
+              <div class="dot-col-val">${d.date}</div>
           </div>
-          <button onclick="msCreateDataQCaseFromRecord('DOT Inspection', '${d.id}', '${d.driver}')" style="background:var(--surface2); color:var(--text); border:1px solid var(--border); padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s;">⚡ Challenge via DataQ</button>
-      </div>
-      
-      <!-- Summary Grid -->
-      <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-bottom: 20px;">
-          <!-- Pie Chart -->
-          <div class="ms-grid-box" onclick="msToggleHistory('${d.id}', 'All')">
-              <div class="ms-grid-box-title">Inspections</div>
-              <div style="width: 36px; height: 36px; border-radius: 50%; background: ${conicBg}; margin-bottom: 8px;"></div>
-              <div style="display: flex; gap: 4px; font-size: 8px; color: var(--muted); font-weight: 700;">
-                  <span style="color:#3b82f6">■ L1</span> <span style="color:#ef4444">■ L2</span> <span style="color:#eab308">■ L3</span>
+          <div>
+              <div class="dot-col-title">Report #</div>
+              <div class="dot-col-val">${d.report}</div>
+          </div>
+          <div>
+              <div class="dot-col-title">Inspection Level</div>
+              <div class="dot-col-val" style="color: var(--text);">Level ${d.level}</div>
+          </div>
+          <div>
+              <div class="dot-col-title">Driver Name</div>
+              <div class="dot-col-val">
+                  <a class="dot-driver-link" onclick="event.stopPropagation(); msOpenDriverCardFromDOT('${d.driver}')">${d.driver}</a>
               </div>
           </div>
-          <!-- Clean Inspection -->
-          <div class="ms-grid-box" onclick="msToggleHistory('${d.id}', 'Clean Inspection')">
-              <div class="ms-grid-box-title">Clean<br>Inspection</div>
-              <div class="ms-grid-box-val">${d.clean || 0}</div>
+          <div>
+              <div class="dot-col-title">Outcome</div>
+              <div class="dot-status-badge" style="${badgeColor}">${d.status}</div>
           </div>
-          <!-- Vehicle Maint -->
-          <div class="ms-grid-box ${d.maint > 0 ? 'alert' : ''}" onclick="msToggleHistory('${d.id}', 'Vehicle Maint.')">
-              <div class="ms-grid-box-title">Vehicle<br>Maint.</div>
-              <div class="ms-grid-box-val">${d.maint}</div>
-          </div>
-          <!-- HOS COMP -->
-          <div class="ms-grid-box ${d.hos > 0 ? 'alert' : ''}" onclick="msToggleHistory('${d.id}', 'HOS Comp.')">
-              <div class="ms-grid-box-title">HOS Comp.</div>
-              <div class="ms-grid-box-val">${d.hos}</div>
-          </div>
-          <!-- Unsafe Driving -->
-          <div class="ms-grid-box ${d.unsafe > 0 ? 'alert' : ''}" onclick="msToggleHistory('${d.id}', 'Unsafe Driving')">
-              <div class="ms-grid-box-title">Unsafe<br>Driving</div>
-              <div class="ms-grid-box-val">${d.unsafe}</div>
-          </div>
-          <!-- Other Violations -->
-          <div class="ms-grid-box" onclick="msToggleHistory('${d.id}', 'Other')">
-              <div class="ms-grid-box-title">Other<br>Violations</div>
-              <div class="ms-grid-box-val">0</div>
-          </div>
-          <!-- OOS -->
-          <div class="ms-grid-box ${d.oos > 0 ? 'alert' : ''}" onclick="msToggleHistory('${d.id}', 'OOS')">
-              <div class="ms-grid-box-title">OOS</div>
-              <div class="ms-grid-box-val">${d.oos}</div>
-          </div>
-          <!-- INSP RETURNED -->
-          <div class="ms-grid-box alert">
-              <div class="ms-grid-box-title">Insp.<br>Returned</div>
-              <div class="ms-grid-box-val" style="font-size: 16px;">NO</div>
+          <div style="text-align: right;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
       </div>
       
       <!-- History Section -->
-      <div id="ms-history-container-${d.id}" style="display: none; margin-bottom: 16px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px;">
+      <div id="ms-history-container-${d.id}" style="display: none; background: #f8fafc; border-top: 1px solid var(--border); padding: 16px 20px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h3 id="ms-history-title-${d.id}" style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text);">Violation History</h3>
-              <button onclick="document.getElementById('ms-history-container-${d.id}').style.display='none'" style="background: none; border: none; color: var(--blue); font-weight: 700; cursor: pointer; font-size: 13px;">← Back to Summary</button>
+              <h3 id="ms-history-title-${d.id}" style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text);">Violations & Inspections Details</h3>
+              <button onclick="msCreateDataQCaseFromRecord('DOT Inspection', '${d.id}', '${d.driver}')" style="background:white; color:var(--text); border:1px solid var(--border); padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:0.2s; box-shadow:0 1px 2px rgba(0,0,0,0.05); ${d.status === 'Clean' ? 'display:none;' : ''}">Challenge via DataQ</button>
           </div>
-          <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
-              <thead>
-                  <tr>
-                      <th style="text-align: left; padding: 0 16px 8px; color: var(--muted); font-size: 12px; font-weight: 700;">Date</th>
-                      <th style="text-align: left; padding: 0 16px 8px; color: var(--muted); font-size: 12px; font-weight: 700;">Type</th>
-                      <th style="text-align: left; padding: 0 16px 8px; color: var(--muted); font-size: 12px; font-weight: 700;">Level</th>
-                      <th style="text-align: left; padding: 0 16px 8px; color: var(--muted); font-size: 12px; font-weight: 700;">Description</th>
-                      <th style="text-align: left; padding: 0 16px 8px; color: var(--muted); font-size: 12px; font-weight: 700;">Status</th>
-                  </tr>
-              </thead>
-              <tbody id="ms-history-body-${d.id}">
-                  <!-- Rows injected via JS -->
-              </tbody>
-          </table>
-      </div>
-
-      <!-- Notes -->
-      <div style="font-size: 13px; color: var(--text); padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-          <strong style="color: var(--blue); font-weight: 800; text-transform: uppercase; font-size: 11px;">Notes:</strong><br>
-          <span style="margin-top: 4px; display: inline-block;">${d.notes || 'No notes available.'}</span>
+          <div style="background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+              <table style="width: 100%; border-collapse: collapse;">
+                  <thead style="background: var(--surface);">
+                      <tr>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">Violation Group</th>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">Description</th>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">FMCSA Code</th>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">Severity</th>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">Financial (Charge)</th>
+                          <th style="text-align: left; padding: 12px 16px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--border);">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody id="ms-history-body-${d.id}">
+                      <!-- Rows injected via JS -->
+                  </tbody>
+              </table>
+          </div>
+          
+          <!-- Notes -->
+          <div style="margin-top: 16px; font-size: 13px; color: var(--text); padding: 12px; background: white; border-radius: 8px; border: 1px solid var(--border);">
+              <strong style="color: var(--blue); font-weight: 800; text-transform: uppercase; font-size: 11px;">Notes:</strong><br>
+              <span style="margin-top: 4px; display: inline-block;">${d.notes || 'No notes available.'}</span>
+          </div>
       </div>
     </div>
     `;
@@ -1639,36 +1690,25 @@ function msRenderDOTTab() {
   </div>
   `;
 
-  return companyScoreHtml + listHtml;
+  return listHtml;
 }
 
 function msFilterDOT() {
     const search = document.getElementById('msDotSearch').value.toLowerCase();
     const status = document.getElementById('msDotStatus').value;
-    const type = document.getElementById('msDotType').value;
     
     document.querySelectorAll('.dot-row-item').forEach(row => {
         const d_name = row.getAttribute('data-name').toLowerCase();
+        const d_report = (row.getAttribute('data-report') || '').toLowerCase();
         const d_status = row.getAttribute('data-status');
-        const d_hos = parseInt(row.getAttribute('data-hos') || '0');
-        const d_uns = parseInt(row.getAttribute('data-uns') || '0');
-        const d_mnt = parseInt(row.getAttribute('data-mnt') || '0');
-        const d_oos = parseInt(row.getAttribute('data-oos') || '0');
         
         let match = true;
-        if (search && !d_name.includes(search)) match = false;
+        if (search && !d_name.includes(search) && !d_report.includes(search)) match = false;
         if (status !== 'All' && d_status !== status) match = false;
-        
-        if (type !== 'All') {
-            if (type === 'HOS' && d_hos === 0) match = false;
-            if (type === 'UNS' && d_uns === 0) match = false;
-            if (type === 'MNT' && d_mnt === 0) match = false;
-            if (type === 'OOS_Type' && d_oos === 0) match = false;
-        }
         
         row.style.display = match ? 'block' : 'none';
         const expandRow = document.getElementById('ms-history-container-' + row.getAttribute('data-id'));
-        if (expandRow) expandRow.style.display = 'none';
+        if (!match && expandRow) expandRow.style.display = 'none';
     });
 }
 
@@ -1678,130 +1718,112 @@ window.msToggleHistory = function(id, category) {
     const tbody = document.getElementById('ms-history-body-' + id);
     
     const d = msMockDOT.find(x => x.id == id);
-    let mockData = [];
-    if (d) {
-        if (d.clean > 0) {
-            if (d.id === 0 && d.clean === 4) {
-                 mockData.push({ date: '2025-08-15', type: 'Clean Inspection', level: 'Level 1', desc: 'No violations found', status: 'Cleared', badgeColor: '#d1fae5', badgeText: '#059669', manualAmount: 150, actualAmount: 150, challenged: 'No', ticket: false, hm: false });
-                 for(let i=0; i<3; i++) {
-                     mockData.push({ date: '2025-05-1' + i, type: 'Clean Inspection', level: 'Level 2', desc: 'No violations found', status: 'Cleared', badgeColor: '#d1fae5', badgeText: '#059669', manualAmount: 100, actualAmount: 100, challenged: 'No', ticket: false, hm: false });
-                 }
-            } else {
-                 for(let i=0; i<d.clean; i++) {
-                     mockData.push({ date: d.date, type: 'Clean Inspection', level: 'Level ' + (d.level || 2), desc: 'No violations found', status: 'Cleared', badgeColor: '#d1fae5', badgeText: '#059669', manualAmount: d.manualAmount, actualAmount: d.actualAmount, challenged: d.challenged, ticket: d.ticket, hm: d.hm });
-                 }
-            }
-        }
-        for (let i=0; i<d.unsafe; i++) mockData.push({ date: d.date, type: 'Unsafe Driving', level: 'Level 1', desc: 'Speeding / Lane Violation', status: 'Violation', badgeColor: '#fee2e2', badgeText: '#ef4444', manualAmount: d.manualAmount, actualAmount: d.actualAmount, challenged: d.challenged, ticket: d.ticket, hm: d.hm });
-        for (let i=0; i<d.maint; i++) mockData.push({ date: d.date, type: 'Vehicle Maint.', level: 'Level 3', desc: 'Equipment defect', status: 'Violation', badgeColor: '#fee2e2', badgeText: '#ef4444', manualAmount: d.manualAmount, actualAmount: d.actualAmount, challenged: d.challenged, ticket: d.ticket, hm: d.hm });
-        for (let i=0; i<d.hos; i++) mockData.push({ date: d.date, type: 'HOS Comp.', level: 'Level 2', desc: 'Logbook violation', status: 'Violation', badgeColor: '#fee2e2', badgeText: '#ef4444', manualAmount: d.manualAmount, actualAmount: d.actualAmount, challenged: d.challenged, ticket: d.ticket, hm: d.hm });
-        for (let i=0; i<d.oos; i++) mockData.push({ date: d.date, type: 'OOS', level: 'Level 1', desc: 'Out of Service - Brakes', status: 'Violation', badgeColor: '#fee2e2', badgeText: '#ef4444', manualAmount: d.manualAmount, actualAmount: d.actualAmount, challenged: d.challenged, ticket: d.ticket, hm: d.hm });
-    }
+    if (!d) return;
 
     if (container.style.display === 'none' || title.dataset.cat !== category) {
         container.style.display = 'block';
-        title.innerText = category === 'All' ? 'Violation History: All Inspections' : `Violation History: ${category}`;
+        title.innerText = 'Inspection Details';
         title.dataset.cat = category;
         
-        const filteredData = category === 'All' ? mockData : mockData.filter(item => item.type === category);
-        
-        if (filteredData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: var(--muted);">No history available for ${category}</td></tr>`;
-        } else {
-            tbody.innerHTML = filteredData.map((item, i) => {
-                let expandedHtml = '';
-                if (item.status === 'Violation') {
-                    expandedHtml = `
-                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-                            <div style="padding: 6px 16px; border-radius: 6px; background-color: #fef2f2; border: 1px solid #fee2e2; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 14px; font-weight: 800; color: #ef4444; letter-spacing: 1px; text-transform: uppercase;">Charge</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Manual</span>
-                                <div style="position: relative; width: 100px;">
-                                    <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
-                                    <input type="number" value="${item.manualAmount}" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Actual</span>
-                                <div style="position: relative; width: 100px;">
-                                    <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
-                                    <input type="number" value="${item.actualAmount}" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
-                                </div>
+        let topPanelHtml = '';
+        if (d.status === 'Clean') {
+            topPanelHtml = `
+            <div style="margin-bottom: 16px; padding: 16px; background: white; border: 1px solid var(--border); border-radius: 8px;">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="padding: 6px 16px; border-radius: 6px; background-color: #ecfdf5; border: 1px solid #d1fae5; display: flex; align-items: center; justify-content: center;">
+                            <span style="font-size: 14px; font-weight: 800; color: #059669; letter-spacing: 1px; text-transform: uppercase;">Bonus</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Manual</span>
+                            <div style="position: relative; width: 100px;">
+                                <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
+                                <input type="number" value="${d.manualAmount}" onchange="msUpdateDOTField('${d.id}', 'manualAmount', this.value)" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 24px; padding: 12px 16px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
-                            <button type="button" onclick="this.innerText='Pending'; this.style.backgroundColor='#fef3c7'; this.style.color='#d97706'; this.style.borderColor='#fde68a';" style="padding: 6px 16px; border: 1px solid #cbd5e1; border-radius: 6px; background: ${item.challenged === 'Yes' ? '#fef3c7' : 'white'}; color: ${item.challenged === 'Yes' ? '#d97706' : 'var(--text)'}; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Actual</span>
+                            <div style="position: relative; width: 100px;">
+                                <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
+                                <input type="number" value="${d.actualAmount}" onchange="msUpdateDOTField('${d.id}', 'actualAmount', this.value)" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        let tableHtml = '';
+        if (!d.violations || d.violations.length === 0) {
+            tableHtml = `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #059669; font-weight: 700; background: #ecfdf5;">No violations found during this Level ${d.level} inspection.</td></tr>`;
+        } else {
+            tableHtml = d.violations.map((item, i) => {
+                return `
+                <tr style="border-bottom: 1px solid var(--border); background: white;">
+                    <td style="padding: 12px 16px; font-weight: 700; color: var(--text); font-size: 13px; vertical-align: middle;">${item.group}</td>
+                    <td style="padding: 12px 16px; color: var(--text); font-size: 13px; vertical-align: middle;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            ${item.desc}
+                            ${item.oos ? `<span style="font-size: 10px; font-weight: 800; background: #dc2626; color: white; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;">OOS</span>` : ''}
+                        </div>
+                    </td>
+                    <td style="padding: 12px 16px; color: var(--blue); font-weight: 700; font-size: 13px; vertical-align: middle;">${item.code}</td>
+                    <td style="padding: 12px 16px; vertical-align: middle;">
+                        <span style="font-size: 12px; font-weight: 800; padding: 4px 8px; border-radius: 6px; background: ${item.severity > 5 ? '#fee2e2' : '#fef3c7'}; color: ${item.severity > 5 ? '#dc2626' : '#d97706'};">
+                            ${item.severity} PTS
+                        </span>
+                    </td>
+                    <td style="padding: 12px 16px; vertical-align: middle;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Manual</span>
+                            <div style="position: relative; width: 80px;">
+                                <span style="position: absolute; left: 8px; top: 4px; font-size: 12px; font-weight: 600; color: var(--muted);">$</span>
+                                <input type="number" value="${item.manualAmount}" style="width: 100%; padding: 4px 4px 4px 18px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
+                            </div>
+                            <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Actual</span>
+                            <div style="position: relative; width: 80px;">
+                                <span style="position: absolute; left: 8px; top: 4px; font-size: 12px; font-weight: 600; color: var(--muted);">$</span>
+                                <input type="number" value="${item.actualAmount}" style="width: 100%; padding: 4px 4px 4px 18px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding: 12px 16px; vertical-align: middle;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <label style="display:flex; align-items:center; gap:4px; font-size:12px; font-weight:700; cursor:pointer; color: var(--text);">
+                                <input type="checkbox" style="width: 14px; height: 14px; accent-color: var(--blue);" ${item.ticket ? 'checked' : ''}> Ticket
+                            </label>
+                            <label style="display:flex; align-items:center; gap:4px; font-size:12px; font-weight:700; cursor:pointer; color: var(--text);">
+                                <input type="checkbox" style="width: 14px; height: 14px; accent-color: var(--blue);" ${item.hm ? 'checked' : ''}> HM
+                            </label>
+                            <button type="button" onclick="this.innerText='Pending'; this.style.backgroundColor='#fef3c7'; this.style.color='#d97706'; this.style.borderColor='#fde68a';" style="padding: 4px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: ${item.challenged === 'Yes' ? '#fef3c7' : 'white'}; color: ${item.challenged === 'Yes' ? '#d97706' : 'var(--text)'}; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-left: 8px;">
                                 ${item.challenged === 'Yes' ? 'Pending' : 'Challenge'}
                             </button>
-                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer; color: var(--text);">
-                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--blue);" ${item.ticket ? 'checked' : ''}> Ticket
-                            </label>
-                            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer; color: var(--text);">
-                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: var(--blue);" ${item.hm ? 'checked' : ''}> HM
-                            </label>
                         </div>
-                    `;
-                } else {
-                    expandedHtml = `
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="padding: 6px 16px; border-radius: 6px; background-color: #ecfdf5; border: 1px solid #d1fae5; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 14px; font-weight: 800; color: #059669; letter-spacing: 1px; text-transform: uppercase;">Bonus</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Manual</span>
-                                <div style="position: relative; width: 100px;">
-                                    <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
-                                    <input type="number" value="${item.manualAmount}" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Actual</span>
-                                <div style="position: relative; width: 100px;">
-                                    <span style="position: absolute; left: 8px; top: 6px; font-size: 13px; font-weight: 600; color: var(--muted);">$</span>
-                                    <input type="number" value="${item.actualAmount}" style="width: 100%; padding: 6px 6px 6px 20px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; outline: none; box-sizing: border-box; color: var(--text);">
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                return `
-                    <tr style="cursor:pointer; background: white;" onclick="document.getElementById('ms-exp-${id}-${i}').style.display = document.getElementById('ms-exp-${id}-${i}').style.display === 'none' ? 'table-row' : 'none'">
-                        <td style="padding: 12px 16px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); border-top-left-radius: 8px; border-bottom-left-radius: 8px;">
-                            <div style="font-weight: 700; color: var(--text); font-size: 13px;">${item.date}</div>
-                        </td>
-                        <td style="padding: 12px 16px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-                            <span style="background-color: ${item.badgeColor}; color: ${item.badgeText}; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
-                                ${item.type}
-                            </span>
-                        </td>
-                        <td style="padding: 12px 16px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); font-weight: 600;">
-                            ${item.level}
-                        </td>
-                        <td style="padding: 12px 16px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); font-weight: 500;">
-                            ${item.desc}
-                        </td>
-                        <td style="padding: 12px 16px; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); border-top-right-radius: 8px; border-bottom-right-radius: 8px; text-align: left;">
-                            <span style="font-size: 12px; font-weight: 800; color: ${item.status === 'Violation' ? '#ef4444' : '#059669'};">
-                                ${item.status.toUpperCase()}
-                            </span>
-                        </td>
-                    </tr>
-                    <tr id="ms-exp-${id}-${i}" style="display: none; background: #f8fafc;">
-                        <td colspan="5" style="padding: 16px 16px 24px 16px; border-bottom: 1px solid #e2e8f0;" onclick="event.stopPropagation()">
-                            ${expandedHtml}
-                        </td>
-                    </tr>
-                `;
+                    </td>
+                </tr>`;
             }).join('');
         }
+
+        let theTopBlock = '';
+        if (d.status === 'Clean') {
+            theTopBlock = `
+            <tr>
+                <td colspan="5" style="padding: 0; border: none; background: transparent;">
+                    ${topPanelHtml}
+                </td>
+            </tr>`;
+        }
+
+        tbody.innerHTML = `
+            ${theTopBlock}
+            ${tableHtml}
+        `;
+
     } else {
         container.style.display = 'none';
         title.dataset.cat = '';
     }
-};
+}
 
 function msRenderEmpTab() {
   return '<div class="ms-drivers-grid">' + msMockEmp.map(e => `
@@ -1823,48 +1845,80 @@ function msRenderEmpTab() {
 }
 
 function msRenderBinderTab() {
-  return '<div class="ms-drivers-grid">' + masterSafetyData.filter(d=>!d.archived).map(driver => {
+  const filterHtml = `
+  <div style="display: flex; gap: 16px; margin-bottom: 16px; background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+      <input type="text" id="msBinderSearch" placeholder="Search by driver name or truck #..." style="flex: 1; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; outline: none;" onkeyup="msFilterBinder()">
+  </div>
+  `;
+
+  return filterHtml + '<div class="ms-drivers-grid ms-binder-cards-container">' + masterSafetyData.filter(d=>!d.archived).map((driver, index) => {
     // Pun set Binder/Equipment podataka iz Excela
     const eq = [
-      { name: 'CDL', status: 'valid' },
-      { name: 'MEDICAL', status: 'valid' },
-      { name: 'Truck Reg', status: 'valid' },
-      { name: 'Trailer Reg', status: 'valid' },
-      { name: 'Truck Insp', status: 'valid' },
-      { name: 'Trailer Insp', status: 'valid' },
-      { name: 'Lease Agreement', status: 'valid' },
-      { name: 'Insurance', status: 'valid' },
-      { name: 'MC Letter', status: 'valid' },
-      { name: 'ELD Manual', status: 'valid' },
-      { name: 'Paper Logs', status: 'missing' },
-      { name: 'IFTA License', status: 'valid' },
-      { name: 'IFTA Stickers', status: 'expiring' },
-      { name: 'Plate Truck', status: 'valid' },
-      { name: 'Plate Trailer', status: 'valid' },
-      { name: 'Warning Triangles & Fire Ext', status: 'valid' }
+      { name: 'CDL', status: 'valid', checkable: false },
+      { name: 'MEDICAL', status: 'valid', checkable: false },
+      { name: 'Truck Reg', status: 'valid', checkable: false },
+      { name: 'Trailer Reg', status: 'valid', checkable: false },
+      { name: 'Truck Insp', status: 'valid', checkable: false },
+      { name: 'Trailer Insp', status: 'valid', checkable: false },
+      { name: 'Lease Agreement', status: 'valid', checkable: false },
+      { name: 'Insurance', status: 'valid', checkable: true },
+      { name: 'MC Letter', status: 'valid', checkable: true },
+      { name: 'ELD Manual', status: 'valid', checkable: true },
+      { name: 'Paper Logs', status: 'missing', checkable: true },
+      { name: 'IFTA License', status: 'valid', checkable: true },
+      { name: 'IFTA Stickers', status: 'expiring', checkable: true },
+      { name: 'Plate Truck', status: 'valid', checkable: true },
+      { name: 'Plate Trailer', status: 'valid', checkable: true },
+      { name: 'Warning Triangles & Fire Ext', status: 'valid', checkable: true }
     ];
+    
+    const truckNum = Math.floor(Math.random()*900)+100;
+    const completed = eq.filter(i => i.status === 'valid').length;
+    const completionPct = Math.round((completed / eq.length) * 100);
+    const conicBg = `conic-gradient(#10b981 0% ${completionPct}%, #e2e8f0 ${completionPct}% 100%)`;
+    const cardId = 'binder-' + index;
+
+    const initials = msGetInitials(driver.name);
+
     return `
-    <div class="ms-driver-card" style="padding:16px 20px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">
-        <div>
-          <span style="font-size:16px; font-weight:800; color:var(--text);">${driver.name}</span>
-          <span style="font-size:13px; color:var(--muted); margin-left:12px; font-weight:600; background:var(--surface2); padding:4px 8px; border-radius:6px; border:1px solid var(--border);">Truck # ${Math.floor(Math.random()*900)+100}</span>
+    <div class="ms-driver-card binder-row-item" data-name="${driver.name.toLowerCase()}" data-truck="${truckNum}" id="${cardId}" style="border-left: 4px solid var(--blue);">
+      <div class="ms-driver-header" onclick="msToggleBinder('${cardId}')">
+        <div class="ms-driver-avatar" style="background: var(--blue); color: white;">${initials}</div>
+        <div class="ms-driver-name-col">
+          <span class="ms-driver-name">${driver.name}</span>
+          <div class="ms-driver-meta">Truck # ${truckNum} • ${driver.state} • ${driver.driverType}</div>
         </div>
-      </div>
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px;">
-        ${eq.map(item => {
-          let badgeHtml = '';
-          if (item.status === 'valid') badgeHtml = '<span class="ms-doc-badge valid">✅</span>';
-          else if (item.status === 'expiring') badgeHtml = '<span class="ms-doc-badge expiring">⏳</span>';
-          else badgeHtml = '<span class="ms-doc-badge missing">❌</span>';
-          
-          return `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; font-size:12px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
-            <span style="font-weight:600; color:var(--text);">${item.name}</span>
-            ${badgeHtml}
+        <div class="ms-compliance-col">
+          <span class="ms-compliance-pct" style="color: var(--blue);">${completionPct}%</span>
+          <div class="ms-compliance-bar-bg">
+            <div class="ms-compliance-bar-fill" style="background: var(--blue); width:${completionPct}%"></div>
           </div>
-          `;
-        }).join('')}
+          <div class="ms-compliance-label" style="color: var(--muted);">Binder Setup</div>
+        </div>
+        <button class="ms-expand-btn" id="${cardId}-btn">▼</button>
+      </div>
+      
+      <div id="${cardId}-docs" style="display:none; margin-top:16px; padding:16px; border-top:1px solid #f1f5f9;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:10px;">
+          ${eq.map(item => {
+            let badgeHtml = '';
+            let checked = item.status === 'valid' ? 'checked' : '';
+            if (item.checkable) {
+               badgeHtml = `<input type="checkbox" ${checked} style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">`;
+            } else {
+               if (item.status === 'valid') badgeHtml = '<span class="ms-doc-badge valid">✓</span>';
+               else if (item.status === 'expiring') badgeHtml = '<span class="ms-doc-badge expiring">⏳</span>';
+               else badgeHtml = '<span class="ms-doc-badge missing">✕</span>';
+            }
+            
+            return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; font-size:12px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+              <span style="font-weight:600; color:var(--text);">${item.name}</span>
+              ${badgeHtml}
+            </div>
+            `;
+          }).join('')}
+        </div>
       </div>
     </div>
     `;
@@ -1950,19 +2004,31 @@ function msRenderDriverBody(driver, linkedLead) {
       </div>
 
       <div class="ms-doc-section">
-        <h4>⚠️ Violations & Issues</h4>
-        ${driver.violations.length === 0
-          ? `<div class="ms-no-violations">✓ No violations on record</div>`
-          : driver.violations.map(v => `
-            <div class="ms-violation-item">
-              <div class="ms-violation-dot ${v.severity}"></div>
+        <h4>Last 3 Inspections</h4>
+        ${(() => {
+          const inspections = msMockDOT.filter(d => d.driver.toLowerCase() === driver.name.toLowerCase())
+                                       .sort((a,b) => new Date(b.date) - new Date(a.date))
+                                       .slice(0, 3);
+          
+          if (inspections.length === 0) return `<div class="ms-no-violations">No inspections on record</div>`;
+          
+          return inspections.map(v => {
+            let badgeColor = '';
+            if (v.status === 'Clean') badgeColor = 'background:#d1fae5; color:#059669;';
+            else if (v.status === 'Violation') badgeColor = 'background:#fef2f2; color:#ef4444;';
+            else if (v.status === 'OOS') badgeColor = 'background:#fee2e2; color:#dc2626;';
+
+            return `
+            <div class="ms-violation-item" style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px;">
               <div>
-                <div class="ms-violation-text">${v.text}</div>
-                <div class="ms-violation-date">${v.date}</div>
+                <div class="ms-violation-text" style="font-weight:700;">Report: ${v.report}</div>
+                <div class="ms-violation-date" style="font-size:11px; color:var(--muted);">${v.date}</div>
               </div>
+              <div style="font-size:10px; font-weight:800; text-transform:uppercase; padding:4px 8px; border-radius:6px; ${badgeColor}">${v.status}</div>
             </div>
-          `).join('')
-        }
+            `;
+          }).join('');
+        })()}
 
         ${driver.notes ? `
           <div style="margin-top: 14px;">
@@ -1986,6 +2052,10 @@ function msRenderDriverBody(driver, linkedLead) {
           <div class="ms-doc-item">
             <span class="ms-doc-name">Recruiter</span>
             <span style="font-size:12px;font-weight:600;color:var(--text);">${driver.recruiter}</span>
+          </div>
+          <div class="ms-doc-item">
+            <span class="ms-doc-name">Dispatcher</span>
+            <span style="font-size:12px;font-weight:600;color:var(--text);">${driver.dispatcher || 'Unassigned'}</span>
           </div>
           <div class="ms-doc-item">
             <span class="ms-doc-name">Last Activity</span>
@@ -2028,13 +2098,18 @@ function msToggleCard(cardId) {
   if (btn) btn.classList.toggle('open', !isOpen);
 }
 
+window.msToggleBinder = function(cardId) {
+  const docs = document.getElementById(`${cardId}-docs`);
+  const btn = document.getElementById(`${cardId}-btn`);
+  if (!docs) return;
+  const isVisible = docs.style.display === 'block';
+  docs.style.display = isVisible ? 'none' : 'block';
+  if (btn) btn.classList.toggle('open', !isVisible);
+};
+
 function msSwitchTab(tab) {
   msActiveTab = tab;
-  document.querySelectorAll('.ms-sub-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.tab === tab);
-  });
-  const container = document.getElementById('ms-drivers-container');
-  if (container) container.innerHTML = msRenderDriversList();
+  renderMasterSafety();
 }
 
 window.msHandleTabSearch = function(val) {
@@ -2083,16 +2158,14 @@ function msAttachListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       msSearchQuery = e.target.value;
-      const container = document.getElementById('ms-drivers-container');
-      if (container) container.innerHTML = msRenderDriversList();
-      msToggleDashboardTop();
+      renderMasterSafety();
     });
   }
 }
 
 function msRenderSMSTab() {
   const years = ['2024', '2025', '2026'];
-  const filteredData = msMockSMSData.filter(d => d.month.includes(msSMSYearFilter));
+  const filteredData = msMockSMSData.filter(d => d.month.includes(msSMSYearFilter)).reverse();
 
   const filterHtml = `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; background:var(--surface); padding:16px 20px; border-radius:14px; border:1px solid var(--border); box-shadow:0 1px 4px rgba(0,0,0,0.05);">
@@ -2164,8 +2237,19 @@ function msRenderSMSTab() {
     `;
   }).join('') + '</div>';
 
-  return filterHtml + cardsHtml;
+  return filterHtml + `
+    <div id="dot-dashboard-flip" class="ms-flip-container">
+      <div class="ms-flip-inner">
+        <div class="ms-flip-front">${cardsHtml}</div>
+        <div class="ms-flip-back" id="dot-flip-back-content">
+          <button onclick="msUnflipDOTCard()" style="position:absolute; top:10px; right:10px; background:transparent; border:none; cursor:pointer; font-size:18px;">✕</button>
+        </div>
+      </div>
+    </div>
+  `;
 }
+
+
 // --- DATAQ TAB RENDERING ---
 window.msCreateDataQCaseFromRecord = function(type, id, driver) {
   const newId = msMockDataQCases.length;

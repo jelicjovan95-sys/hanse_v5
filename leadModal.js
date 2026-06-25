@@ -412,6 +412,53 @@ function _renderFullModal(lead) {
 
         <div class="collapsible-section">
             <div class="collapsible-header" onclick="toggleSection(this)">
+                <span>Binder</span>
+                <span>▼</span>
+            </div>
+            <div class="collapsible-content">
+                <div style="padding: 16px;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:10px;">
+                        ${[
+                          { name: 'CDL', status: 'valid', checkable: false },
+                          { name: 'MEDICAL', status: 'valid', checkable: false },
+                          { name: 'Truck Reg', status: 'valid', checkable: false },
+                          { name: 'Trailer Reg', status: 'valid', checkable: false },
+                          { name: 'Truck Insp', status: 'valid', checkable: false },
+                          { name: 'Trailer Insp', status: 'valid', checkable: false },
+                          { name: 'Lease Agreement', status: 'valid', checkable: false },
+                          { name: 'Insurance', status: 'valid', checkable: true },
+                          { name: 'MC Letter', status: 'valid', checkable: true },
+                          { name: 'ELD Manual', status: 'valid', checkable: true },
+                          { name: 'Paper Logs', status: 'missing', checkable: true },
+                          { name: 'IFTA License', status: 'valid', checkable: true },
+                          { name: 'IFTA Stickers', status: 'expiring', checkable: true },
+                          { name: 'Plate Truck', status: 'valid', checkable: true },
+                          { name: 'Plate Trailer', status: 'valid', checkable: true },
+                          { name: 'Warning Triangles & Fire Ext', status: 'valid', checkable: true }
+                        ].map(item => {
+                          let badgeHtml = '';
+                          let checked = item.status === 'valid' ? 'checked' : '';
+                          if (item.checkable) {
+                             badgeHtml = `<input type="checkbox" ${checked} style="width:16px; height:16px; cursor:pointer;" onclick="event.stopPropagation()">`;
+                          } else {
+                             if (item.status === 'valid') badgeHtml = '<span class="ms-doc-badge valid" style="background:#d1fae5; color:#059669; padding:4px 8px; border-radius:4px; font-weight:800; font-size:10px;">✓</span>';
+                             else if (item.status === 'expiring') badgeHtml = '<span class="ms-doc-badge expiring" style="background:#fef9e7; color:#d4ac0d; padding:4px 8px; border-radius:4px; font-weight:800; font-size:10px;">⏳</span>';
+                             else badgeHtml = '<span class="ms-doc-badge missing" style="background:#fee2e2; color:#ef4444; padding:4px 8px; border-radius:4px; font-weight:800; font-size:10px;">✕</span>';
+                          }
+                          return `
+                          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:white; border:1px solid #e2e8f0; border-radius:8px; font-size:11px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+                            <span style="font-weight:700; color:#334155;">${item.name}</span>
+                            ${badgeHtml}
+                          </div>
+                          `;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="collapsible-section">
+            <div class="collapsible-header" onclick="toggleSection(this)">
                 <span>Insurance</span>
                 <span>▼</span>
             </div>
@@ -547,8 +594,8 @@ function _renderFullModal(lead) {
                                 <div class="metric-label" style="font-size: 11px;">Open Claims</div>
                                 <div class="metric-value" style="font-size: 18px;">1</div>
                             </div>
-                            <div class="metric-card" style="padding: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'" onclick="toggleClaimsHistory('${lead.id}', 'Pending')">
-                                <div class="metric-label" style="font-size: 11px; color: #d97706;">Pending Claims</div>
+                            <div class="metric-card" style="padding: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'" onclick="toggleClaimsHistory('${lead.id}', 'Potential')">
+                                <div class="metric-label" style="font-size: 11px; color: #d97706;">Potential Claims</div>
                                 <div class="metric-value" style="font-size: 18px; color: #d97706;">1</div>
                             </div>
                             <div class="metric-card status-good" style="padding: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='#d1fae5'" onclick="toggleClaimsHistory('${lead.id}', 'Closed')">
